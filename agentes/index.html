@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arquiteto de Agentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: guia em passos — barra lateral com o percurso (topo no telemóvel), um passo de cada vez, prompt final em bloco de código. */
+:root {
+  --bg: #F5F6F4;
+  --surface: #FFFFFF;
+  --sunk: #ECEEEA;
+  --ink: #16191F;
+  --muted: #555C66;
+  --line: #DADDD6;
+  --accent: #E8781E;
+  --accent-ink: #1A1206;
+  --accent-soft: #FCE8D6;
+  --ok: #1E7F4F;
+  --ok-soft: #DDF1E6;
+  --warn: #9A5B00;
+  --warn-soft: #FBEBCB;
+  --code-bg: #16191F;
+  --code-fg: #E9ECE6;
+  --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --f-body: "Figtree", "Segoe UI", Roboto, sans-serif;
+  --f-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111317; --surface: #1A1D23; --sunk: #22262D; --ink: #EDEFEA; --muted: #A5ACB5; --line: #2F343C;
+    --accent: #F28C3A; --accent-ink: #1A1206; --accent-soft: #3A2615; --ok: #5FD093; --ok-soft: #173326;
+    --warn: #F0B65A; --warn-soft: #3A2B12; --code-bg: #0B0D10; --code-fg: #E9ECE6; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111317; --surface: #1A1D23; --sunk: #22262D; --ink: #EDEFEA; --muted: #A5ACB5; --line: #2F343C;
+  --accent: #F28C3A; --accent-ink: #1A1206; --accent-soft: #3A2615; --ok: #5FD093; --ok-soft: #173326;
+  --warn: #F0B65A; --warn-soft: #3A2B12; --code-bg: #0B0D10; --code-fg: #E9ECE6; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 17px; line-height: 1.55; }
+a { color: var(--ink); text-decoration-color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 2px; }
+a:hover { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+.top { border-bottom: 1px solid var(--line); background: var(--surface); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px; }
+.top-in { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.brand { font-family: var(--f-display); font-weight: 800; font-size: 20px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; }
+.brand-mark { width: 30px; height: 30px; border-radius: 8px; background: var(--accent); display: grid; place-items: center; color: var(--accent-ink); font-size: 15px; font-weight: 800; }
+.by { font-size: 14px; color: var(--muted); }
+.progress { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 72px; display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 40px; }
+@media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-block: 20px 56px; } }
+
+nav.steps { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); align-self: start; display: flex; flex-direction: column; gap: 4px; }
+nav.steps button { all: unset; cursor: pointer; display: flex; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 10px; color: var(--muted); font-weight: 500; font-size: 15px; }
+nav.steps button .n { width: 26px; height: 26px; flex: none; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 13px; font-variant-numeric: tabular-nums; font-weight: 600; }
+nav.steps button:hover { background: var(--sunk); color: var(--ink); }
+nav.steps button[aria-current="step"] { background: var(--surface); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+nav.steps button[aria-current="step"] .n { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+nav.steps button.done .n { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+@media (max-width: 860px) {
+  nav.steps { position: static; flex-direction: row; overflow-x: auto; gap: 6px; padding-bottom: 4px; }
+  nav.steps button { white-space: nowrap; padding: 8px 10px; }
+  nav.steps button .lbl { display: none; }
+  nav.steps button[aria-current="step"] .lbl { display: inline; }
+}
+
+main { min-width: 0; }
+.panel { display: flex; flex-direction: column; gap: 22px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1, h2, h3 { font-family: var(--f-display); letter-spacing: -0.015em; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.04; font-weight: 800; }
+h2 { font-size: clamp(26px, 3.4vw, 36px); line-height: 1.1; font-weight: 700; }
+h3 { font-size: 20px; line-height: 1.25; font-weight: 700; }
+p { margin: 0; max-width: 68ch; }
+.lead { font-size: 19px; color: var(--muted); max-width: 62ch; }
+.muted { color: var(--muted); }
+small, .small { font-size: 14px; color: var(--muted); }
+
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.card .k { font-family: var(--f-display); font-weight: 700; font-size: 18px; }
+.callout { border-radius: var(--r); padding: 16px 18px; background: var(--accent-soft); display: flex; flex-direction: column; gap: 6px; }
+.callout.ok { background: var(--ok-soft); }
+.callout.warn { background: var(--warn-soft); }
+.callout b { font-weight: 700; }
+
+ol.howto { counter-reset: s; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+ol.howto > li { counter-increment: s; position: relative; padding-left: 46px; min-width: 0; }
+ol.howto > li::before { content: counter(s); position: absolute; left: 0; top: -1px; width: 30px; height: 30px; border-radius: 50%; background: var(--sunk); color: var(--ink); display: grid; place-items: center; font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; }
+ol.howto > li b { font-weight: 700; }
+ol.howto > li p + p, ol.howto > li .code { margin-top: 8px; }
+
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.tab { all: unset; cursor: pointer; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); font-size: 15px; font-weight: 600; color: var(--muted); }
+.tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+.code { position: relative; background: var(--code-bg); color: var(--code-fg); border-radius: 12px; font-family: var(--f-mono); font-size: 14px; line-height: 1.55; min-width: 0; }
+.code pre { margin: 0; padding: 16px 16px; padding-right: 92px; overflow-x: auto; white-space: pre; }
+.code.wrap pre { white-space: pre-wrap; word-break: break-word; max-height: 520px; overflow-y: auto; }
+.copy { position: absolute; top: 10px; right: 10px; font-family: var(--f-body); font-size: 13px; font-weight: 600; border: 0; border-radius: 8px; padding: 6px 12px; background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.copy.done { background: var(--ok); color: #FFFFFF; }
+
+table.plans { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+table.plans th, table.plans td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.plans th { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+table.plans tr.rec td { background: var(--accent-soft); }
+.scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+
+form { display: flex; flex-direction: column; gap: 26px; }
+fieldset { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+legend { font-family: var(--f-display); font-weight: 700; font-size: 22px; margin-bottom: 4px; padding: 0; }
+.f { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.f > label, .q { font-weight: 600; font-size: 16px; }
+.hint { font-size: 14px; color: var(--muted); }
+input[type="text"], input[type="number"], select, textarea { font: inherit; font-size: 16px; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 12px; width: 100%; min-width: 0; }
+textarea { min-height: 88px; resize: vertical; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+.two { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; }
+.chip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.chip span { display: inline-block; padding: 8px 14px; border: 1.5px solid var(--line); border-radius: 999px; font-size: 15px; background: var(--surface); }
+.chip input:checked + span { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.agents { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.agent { background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--r); padding: 16px; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.agent input { margin-top: 4px; width: 20px; height: 20px; accent-color: var(--accent); flex: none; }
+.agent .t { font-weight: 700; }
+.agent .d { font-size: 14px; color: var(--muted); }
+.agent:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.agent.locked { cursor: default; }
+.sub { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.sub h3 { display: flex; align-items: center; gap: 10px; }
+.tag { font-family: var(--f-body); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: var(--sunk); color: var(--muted); }
+
+.nav-btns { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 8px; border-top: 1px solid var(--line); margin-top: 8px; padding-block: 20px 0; }
+.btn { font: inherit; font-weight: 700; font-size: 16px; border-radius: 12px; padding: 12px 20px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn:hover { filter: brightness(0.97); }
+
+.summary { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.summary .card .v { font-family: var(--f-display); font-size: 24px; font-weight: 800; line-height: 1.15; }
+.list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-weight: 600; }
+.flow span { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+.flow i { font-style: normal; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { .panel { animation: in .25s ease-out; } @keyframes in { from { transform: translateY(6px); } to { transform: none; } } }
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">A</span>Arquiteto de Agentes <span class="by">· Upmax Pro</span></div>
+    <div class="progress" id="progress">Passo 1 de 8</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="steps" id="steps" aria-label="Passos do guia"></nav>
+  <main id="main">
+
+  <!-- 1 -->
+  <section class="panel" data-step="1" data-label="Começar">
+    <div class="eyebrow">Guia para empresários · sem precisar de saber programar</div>
+    <h1>Monte uma equipa de agentes de IA para a sua empresa</h1>
+    <p class="lead">Este guia leva-o do zero até ter agentes a trabalhar para si dentro do Claude Code: anúncios, atendimento, faturas, site, vídeos e mais. No fim, a página gera um texto que cola no Claude Code e ele constrói tudo consigo, passo a passo.</p>
+    <div class="flow" aria-label="Como funciona">
+      <span>Você</span><i>→</i><span>Hermes, o gerente</span><i>→</i><span>Agentes especialistas</span><i>→</i><span>Meta, Google, WhatsApp, faturação…</span>
+    </div>
+    <h2>Em linguagem simples</h2>
+    <div class="grid">
+      <div class="card"><div class="k">Claude Code</div><p>Um assistente de IA que trabalha no seu computador. Lê e cria ficheiros, abre o navegador e liga-se às suas ferramentas. Você fala com ele por escrito, em português.</p></div>
+      <div class="card"><div class="k">Agente</div><p>Um "funcionário digital" com uma função só: tratar dos anúncios, responder a leads, controlar faturas. Cada um sabe as regras da sua empresa.</p></div>
+      <div class="card"><div class="k">Skill</div><p>O manual de instruções de um agente. É um ficheiro de texto com o passo a passo de uma tarefa. Escreve-se uma vez e o agente segue-o sempre.</p></div>
+      <div class="card"><div class="k">MCP (conector)</div><p>A "ficha" que liga o Claude Code a outra plataforma, como o Meta Ads ou o Google Ads, para ele trabalhar lá dentro com a sua autorização.</p></div>
+      <div class="card"><div class="k">VPS</div><p>Um computador alugado na internet que fica ligado 24 horas. Serve para os agentes que precisam de trabalhar mesmo com o seu computador desligado.</p></div>
+      <div class="card"><div class="k">Orquestrador</div><p>O gerente da equipa. Aqui chama-se Hermes: recebe o seu pedido, divide-o pelos agentes certos e mostra-lhe o resultado.</p></div>
+    </div>
+    <div class="callout"><b>Quanto tempo leva?</b><p>Responder ao questionário: 15 a 20 minutos. Instalar e montar os primeiros agentes: uma a duas tardes. Não precisa de fazer tudo de uma vez; o Claude Code guarda o progresso.</p></div>
+    <div class="callout ok"><b>Já tem o Claude Code instalado?</b><p>Salte para o passo 5, responda ao questionário e cole o resultado no Claude Code.</p></div>
+  </section>
+
+  <!-- 2 -->
+  <section class="panel" data-step="2" data-label="Plano e custos" hidden>
+    <div class="eyebrow">Passo 2</div>
+    <h2>Escolher o plano do Claude</h2>
+    <p>O Claude Code vem incluído nos planos pagos do Claude. O gratuito não tem Claude Code. Os preços estão em dólares no site oficial; o valor em euros depende do câmbio e do IVA.</p>
+    <div class="scroll">
+      <table class="plans">
+        <thead><tr><th>Plano</th><th>Preço</th><th>Para quem</th></tr></thead>
+        <tbody id="plansBody">
+          <tr data-plan="pro"><td><b>Pro</b></td><td>20 USD/mês<br><small>ou 17 USD/mês pago ao ano</small></td><td>Começar: 1 ou 2 agentes, uso algumas horas por semana.</td></tr>
+          <tr data-plan="max5"><td><b>Max 5x</b></td><td>100 USD/mês</td><td>Uso diário com vários agentes. É o ponto de partida recomendado para uma empresa a sério.</td></tr>
+          <tr data-plan="max20"><td><b>Max 20x</b></td><td>200 USD/mês</td><td>Uso intenso todo o dia, muitos agentes e automações em paralelo.</td></tr>
+          <tr data-plan="team"><td><b>Team</b></td><td>25 USD por pessoa/mês<br><small>Premium: 125 USD por pessoa/mês</small></td><td>Equipas com várias pessoas a usar, faturação central. Para Claude Code a sério, os lugares Premium.</td></tr>
+          <tr data-plan="ent"><td><b>Enterprise</b></td><td>Sob consulta</td><td>Organizações grandes e entidades públicas com requisitos de auditoria e controlo.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Preços de <a href="https://claude.com/pricing" target="_blank" rel="noopener">claude.com/pricing</a>, consultados em outubro de 2026. Confirme sempre antes de comprar.</p>
+    <div class="callout" id="planHint"><b>A nossa sugestão para si</b><p>Responda ao questionário no passo 5 e esta caixa mostra o plano indicado para o seu caso. Na dúvida, comece pelo Pro e suba quando bater no limite: a mudança é proporcional ao mês.</p></div>
+    <h3>Outros custos possíveis</h3>
+    <div class="grid">
+      <div class="card"><div class="k">VPS (servidor 24h)</div><p>Só se precisar de agentes sempre ligados (WhatsApp, relatórios automáticos). Referência: Hostinger KVM 2 (2 vCPU, 8 GB RAM), cerca de 10 a 17 USD/mês com contrato anual.</p></div>
+      <div class="card"><div class="k">Domínio e alojamento</div><p>Só se ainda não tem site. Em Portugal, a Amen.pt vende domínio .pt e alojamento, com o domínio grátis no 1.º ano em promoção.</p></div>
+      <div class="card"><div class="k">Anúncios</div><p>O que investe no Meta ou no Google é pago diretamente às plataformas, com o seu cartão. O agente nunca mexe no cartão.</p></div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="panel" data-step="3" data-label="Instalar" hidden>
+    <div class="eyebrow">Passo 3</div>
+    <h2>Instalar o Claude Code</h2>
+    <p>Há duas formas. Se nunca abriu um terminal, use a <b>aplicação de computador</b>. Se já está à vontade, o terminal dá mais controlo.</p>
+    <div class="tabs" role="tablist" aria-label="Forma de instalar">
+      <button class="tab" role="tab" aria-selected="true" data-tabgroup="inst" data-tab="app" id="tab-app">Aplicação (mais fácil)</button>
+      <button class="tab" role="tab" aria-selected="false" data-tabgroup="inst" data-tab="mac" id="tab-mac">Mac, pelo terminal</button>
+      <button class="tab" role="tab" aria-selected="false" data-tabgroup="inst" data-tab="win" id="tab-win">Windows, pelo terminal</button>
+    </div>
+    <div data-tabpanel="inst" data-tab="app">
+      <ol class="howto">
+        <li><p><b>Crie conta e escolha o plano</b> em <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> (passo 2).</p></li>
+        <li><p><b>Descarregue a aplicação Claude</b> em <a href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a> e instale como qualquer programa.</p></li>
+        <li><p><b>Entre com a sua conta</b> e abra a área <b>Code</b> da aplicação.</p></li>
+        <li><p><b>Escolha uma pasta</b> para a empresa, por exemplo <code>Documentos/Empresa-IA</code>. É aí que os agentes vão viver.</p></li>
+        <li><p><b>Teste:</b> escreva "Olá, explica-me em 3 linhas o que consegues fazer nesta pasta." Se responder, está pronto.</p></li>
+      </ol>
+    </div>
+    <div data-tabpanel="inst" data-tab="mac" hidden>
+      <ol class="howto">
+        <li><p><b>Abra o Terminal:</b> carregue em Cmd + Espaço, escreva "Terminal" e Enter.</p></li>
+        <li><p><b>Cole este comando e carregue em Enter.</b> Não mostra progresso; espere até voltar a aparecer o cursor.</p>
+          <div class="code"><pre>curl -fsSL https://claude.ai/install.sh | bash</pre><button class="copy" type="button">Copiar</button></div></li>
+        <li><p><b>Feche e abra outra vez o Terminal</b> e confirme que ficou instalado:</p>
+          <div class="code"><pre>claude --version</pre><button class="copy" type="button">Copiar</button></div></li>
+        <li><p><b>Crie a pasta da empresa e entre nela:</b></p>
+          <div class="code"><pre>mkdir -p ~/Empresa-IA && cd ~/Empresa-IA && claude</pre><button class="copy" type="button">Copiar</button></div></li>
+        <li><p><b>Faça login:</b> abre-se o navegador; entre com a conta do plano pago.</p></li>
+      </ol>
+    </div>
+    <div data-tabpanel="inst" data-tab="win" hidden>
+      <ol class="howto">
+        <li><p><b>Abra o PowerShell:</b> botão Iniciar, escreva "PowerShell" e Enter. Não precisa de ser administrador.</p></li>
+        <li><p><b>Cole este comando e carregue em Enter:</b></p>
+          <div class="code"><pre>irm https://claude.ai/install.ps1 | iex</pre><button class="copy" type="button">Copiar</button></div></li>
+        <li><p><b>Recomendado:</b> instale o <a href="https://git-scm.com/downloads/win" target="_blank" rel="noopener">Git for Windows</a> (opções por defeito).</p></li>
+        <li><p><b>Feche e abra outra vez o PowerShell</b> e confirme:</p>
+          <div class="code"><pre>claude --version</pre><button class="copy" type="button">Copiar</button></div></li>
+        <li><p><b>Crie a pasta da empresa e entre nela:</b></p>
+          <div class="code"><pre>mkdir $HOME\Empresa-IA; cd $HOME\Empresa-IA; claude</pre><button class="copy" type="button">Copiar</button></div></li>
+        <li><p><b>Faça login</b> no navegador que se abre, com a conta do plano pago.</p></li>
+      </ol>
+    </div>
+    <div class="callout warn"><b>Se algo falhar</b><p>Escreva no terminal <code>claude doctor</code>. Mostra o que está mal e como corrigir. Requisitos: macOS 13 ou mais recente, Windows 10 (1809) ou mais recente, 4 GB de RAM.</p></div>
+    <p class="small">Fonte: <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">documentação oficial do Claude Code</a>.</p>
+  </section>
+
+  <!-- 4 -->
+  <section class="panel" data-step="4" data-label="Navegador" hidden>
+    <div class="eyebrow">Passo 4</div>
+    <h2>Ligar o Claude Code ao Chrome</h2>
+    <p>Com a extensão, o Claude Code mexe no navegador por si: abre o Gestor de Anúncios, preenche formulários, tira dados de sites. Trabalha num separador visível, por isso vê tudo o que ele faz.</p>
+    <ol class="howto">
+      <li><p><b>Instale a extensão "Claude"</b> na <a href="https://chromewebstore.google.com/detail/claude/fcoeoabgfenejglbffodgkkbkcdhcgfn" target="_blank" rel="noopener">Chrome Web Store</a> e entre com a mesma conta.</p></li>
+      <li><p><b>Abra o Claude Code com o navegador ligado:</b></p>
+        <div class="code"><pre>claude --chrome</pre><button class="copy" type="button">Copiar</button></div></li>
+      <li><p><b>Na primeira vez</b> aparece uma janela a explicar as permissões. Carregue em Enter.</p></li>
+      <li><p><b>Para ficar sempre ligado:</b> dentro do Claude Code escreva <code>/chrome</code> e escolha "Enabled by default".</p></li>
+      <li><p><b>Teste:</b> "Abre o site da minha empresa e diz-me se há algum erro na página inicial."</p></li>
+    </ol>
+    <div class="callout warn"><b>Segurança no navegador</b><p>Crie um perfil do Chrome só para o trabalho com IA, sem banco, finanças ou dados de saúde. O Claude pára nos logins e CAPTCHAs e pede-lhe para os fazer. Nunca lhe dê palavras-passe nem dados de cartão.</p></div>
+    <p class="small">Fonte: <a href="https://code.claude.com/docs/en/chrome" target="_blank" rel="noopener">Claude Code com Chrome</a>.</p>
+  </section>
+
+  <!-- 5 -->
+  <section class="panel" data-step="5" data-label="A sua empresa" hidden>
+    <div class="eyebrow">Passo 5 · Questionário</div>
+    <h2>Conte-nos sobre a sua empresa</h2>
+    <p>Quanto mais detalhe, melhores os agentes. As respostas ficam só neste navegador; nada é enviado para lado nenhum.</p>
+    <form id="formEmpresa" autocomplete="off">
+      <fieldset>
+        <legend>O negócio</legend>
+        <div class="two">
+          <div class="f"><label for="nome">Nome da empresa</label><input type="text" id="nome" name="nome" placeholder="Ex.: Loja do Lima"></div>
+          <div class="f"><label for="local">Onde fica</label><input type="text" id="local" name="local" placeholder="Ex.: Ponte de Lima"></div>
+        </div>
+        <div class="two">
+          <div class="f"><label for="setor">Tipo de negócio</label>
+            <select id="setor" name="setor">
+              <option value="">Escolha…</option>
+              <option>Comércio / retalho (loja física)</option>
+              <option>E-commerce / loja online</option>
+              <option>Restauração / café</option>
+              <option>Personal trainer / ginásio</option>
+              <option>Clínica / saúde / estética</option>
+              <option>Agência de marketing</option>
+              <option>Serviços (contabilidade, advocacia, consultoria)</option>
+              <option>Construção / obras / remodelações</option>
+              <option>Imobiliária</option>
+              <option>Turismo / alojamento local</option>
+              <option>Indústria / produção</option>
+              <option>Câmara municipal / entidade pública</option>
+              <option>Associação / IPSS</option>
+              <option>Outro</option>
+            </select></div>
+          <div class="f"><label for="pessoas">Quantas pessoas trabalham consigo</label>
+            <select id="pessoas" name="pessoas">
+              <option value="">Escolha…</option><option>Só eu</option><option>2 a 5</option><option>6 a 15</option><option>16 a 50</option><option>Mais de 50</option>
+            </select></div>
+        </div>
+        <div class="f"><label for="oque">O que vende e a quem</label><textarea id="oque" name="oque" placeholder="Ex.: Roupa de senhora, clientes da região entre 30 e 60 anos, a maioria compra na loja."></textarea></div>
+        <div class="two">
+          <div class="f"><label for="ticket">Valor médio de uma venda</label><input type="text" id="ticket" name="ticket" placeholder="Ex.: 45 €"></div>
+          <div class="f"><label for="tecnico">À vontade com tecnologia</label>
+            <select id="tecnico" name="tecnico"><option value="">Escolha…</option><option>Nada, sou leigo</option><option>Uso o básico (email, redes)</option><option>Razoável</option><option>Muito</option></select></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Como chegam os clientes hoje</legend>
+        <div class="chips" role="group" aria-label="Canais">
+          <label class="chip"><input type="checkbox" name="canais" value="Passa-palavra / recomendação"><span>Passa-palavra</span></label>
+          <label class="chip"><input type="checkbox" name="canais" value="Instagram/Facebook orgânico"><span>Redes sociais (orgânico)</span></label>
+          <label class="chip"><input type="checkbox" name="canais" value="Meta Ads"><span>Meta Ads</span></label>
+          <label class="chip"><input type="checkbox" name="canais" value="Google Ads"><span>Google Ads</span></label>
+          <label class="chip"><input type="checkbox" name="canais" value="Google Maps / Perfil da Empresa"><span>Google Maps</span></label>
+          <label class="chip"><input type="checkbox" name="canais" value="Site"><span>Site</span></label>
+          <label class="chip"><input type="checkbox" name="canais" value="WhatsApp"><span>WhatsApp</span></label>
+          <label class="chip"><input type="checkbox" name="canais" value="Loja física / montra"><span>Loja física</span></label>
+          <label class="chip"><input type="checkbox" name="canais" value="Marketplaces (OLX, Amazon, etc.)"><span>Marketplaces</span></label>
+        </div>
+        <div class="f"><label for="ferramentas">Que programas já usa</label><input type="text" id="ferramentas" name="ferramentas" placeholder="Ex.: Moloni para faturar, Excel para stock, WhatsApp Business, Gmail"></div>
+        <div class="two">
+          <div class="f"><label for="site">Tem site?</label>
+            <select id="site" name="site"><option value="">Escolha…</option><option>Sim, e estou contente</option><option>Sim, mas precisa de ser refeito</option><option>Não tenho</option></select></div>
+          <div class="f"><label for="dominio">Tem domínio e alojamento?</label>
+            <select id="dominio" name="dominio"><option value="">Escolha…</option><option>Sim, os dois</option><option>Só o domínio</option><option>Não tenho nenhum</option><option>Não sei</option></select></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Onde dói</legend>
+        <div class="f"><label for="gargalo">Qual é o maior gargalo da empresa hoje?</label><span class="hint">A tarefa que trava tudo, ou que só uma pessoa sabe fazer.</span><textarea id="gargalo" name="gargalo" placeholder="Ex.: Responder a todos os pedidos de orçamento no WhatsApp; perco clientes por demorar."></textarea></div>
+        <div class="f"><label for="dor">Qual é o problema que mais lhe tira o sono?</label><textarea id="dor" name="dor" placeholder="Ex.: Não sei de onde vêm as vendas nem quanto custa cada cliente."></textarea></div>
+        <div class="f"><label for="repetitivo">Que tarefas repetitivas faz todas as semanas?</label><textarea id="repetitivo" name="repetitivo" placeholder="Ex.: Lançar faturas, publicar nas redes, responder às mesmas perguntas, fazer relatórios."></textarea></div>
+        <div class="two">
+          <div class="f"><label for="horas">Horas por semana gastas nessas tarefas</label><input type="number" id="horas" name="horas" min="0" max="200" placeholder="Ex.: 12"></div>
+          <div class="f"><label for="objetivo">Objetivo para os próximos 6 meses</label><input type="text" id="objetivo" name="objetivo" placeholder="Ex.: Mais 20 clientes por mês"></div>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+
+  <!-- 6 -->
+  <section class="panel" data-step="6" data-label="Os seus agentes" hidden>
+    <div class="eyebrow">Passo 6 · Questionário</div>
+    <h2>Que agentes quer na equipa?</h2>
+    <p>Escolha os que fazem sentido. O Hermes (gerente) e o agente de segurança entram sempre. Para cada agente escolhido aparecem perguntas específicas por baixo.</p>
+    <form id="formAgentes" autocomplete="off">
+      <div class="agents" id="agentList"></div>
+      <div id="agentQuestions" style="display:flex;flex-direction:column;gap:16px"></div>
+    </form>
+  </section>
+
+  <!-- 7 -->
+  <section class="panel" data-step="7" data-label="Infraestrutura" hidden>
+    <div class="eyebrow">Passo 7</div>
+    <h2>Servidor, site e conectores</h2>
+    <div id="infraNeeds" class="summary"></div>
+
+    <h3>VPS: o computador sempre ligado</h3>
+    <ol class="howto">
+      <li><p><b>Compre uma VPS</b> com Ubuntu 24.04. Referência: <a href="https://www.hostinger.com/vps-hosting" target="_blank" rel="noopener">Hostinger KVM 2</a> (2 vCPU, 8 GB RAM, 100 GB). Escolha um centro de dados na Europa.</p></li>
+      <li><p><b>Não precisa de configurar à mão.</b> Depois de colar o prompt final, o Claude Code guia-o: cria um utilizador sem privilégios, ativa a firewall, bloqueia tentativas de entrada e instala o Claude Code no servidor.</p></li>
+      <li><p><b>Guarde os dados de acesso</b> num gestor de palavras-passe (Bitwarden, 1Password). Nunca os cole numa conversa.</p></li>
+    </ol>
+
+    <h3>Site: domínio e alojamento</h3>
+    <ol class="howto">
+      <li><p><b>Compre o domínio .pt e o alojamento</b> na <a href="https://www.amen.pt" target="_blank" rel="noopener">Amen.pt</a>, ou use a VPS para alojar o site.</p></li>
+      <li><p><b>O agente Web cria o site</b> a partir das suas respostas e prepara-o para publicar. Você só aprova o resultado.</p></li>
+    </ol>
+
+    <h3>Conector do Meta Ads</h3>
+    <ol class="howto">
+      <li><p><b>Precisa de:</b> uma conta no Meta Business (Gestor de Negócios) com a conta de anúncios e a Página, e ser administrador.</p></li>
+      <li><p><b>Adicione o conector oficial da Meta</b> ao Claude Code:</p>
+        <div class="code"><pre>claude mcp add --transport http meta-ads https://mcp.facebook.com/ads</pre><button class="copy" type="button">Copiar</button></div></li>
+      <li><p><b>Autorize:</b> dentro do Claude Code escreva <code>/mcp</code>, escolha "meta-ads" e faça login no Facebook. Escolha as contas e o nível de acesso. Comece por <b>só leitura</b>; passe a leitura e escrita quando confiar no fluxo.</p></li>
+      <li><p><b>Regra de ouro:</b> tudo o que o agente cria fica <b>em pausa</b>. É você que ativa a campanha.</p></li>
+    </ol>
+    <div class="callout warn"><b>Ainda em beta</b><p>O conector oficial está a ser disponibilizado aos poucos, conta a conta. Se aparecer "This ad account is not enabled for the Ads MCP", a alternativa oficial é a ferramenta de linha de comandos da Meta (<code>pip install meta-ads-cli</code> e depois <code>meta auth login</code>), que o Claude Code também sabe usar.</p></div>
+
+    <h3>Conector do Google Ads</h3>
+    <ol class="howto">
+      <li><p><b>O conector oficial da Google só lê dados</b> (relatórios, desempenho). Criar campanhas faz-se pelo navegador com a extensão do passo 4, ou pela API com acesso de escrita.</p></li>
+      <li><p><b>Precisa de:</b> um "developer token" (Centro de API numa conta de gestor), um projeto no Google Cloud com a Google Ads API ativa, e credenciais OAuth de aplicação de computador.</p></li>
+      <li><p><b>Depois de ter esses dados</b>, o comando é este (substitua os valores):</p>
+        <div class="code"><pre>claude mcp add google-ads \
+  --env GOOGLE_APPLICATION_CREDENTIALS=/caminho/credenciais.json \
+  --env GOOGLE_PROJECT_ID=o-seu-projeto \
+  --env GOOGLE_ADS_DEVELOPER_TOKEN=o-seu-token \
+  -- pipx run --spec git+https://github.com/googleads/google-ads-mcp.git google-ads-mcp</pre><button class="copy" type="button">Copiar</button></div></li>
+      <li><p><b>Não se assuste:</b> o prompt final pede ao Claude Code para o guiar nisto clique a clique, com o navegador.</p></li>
+    </ol>
+    <p class="small">Fontes: <a href="https://github.com/googleads/google-ads-mcp" target="_blank" rel="noopener">googleads/google-ads-mcp</a>, <a href="https://mcp.directory/blog/meta-ads-cli-mcp" target="_blank" rel="noopener">guia do conector Meta Ads</a>.</p>
+  </section>
+
+  <!-- 8 -->
+  <section class="panel" data-step="8" data-label="O seu plano" hidden>
+    <div class="eyebrow">Passo 8 · Resultado</div>
+    <h2 id="resTitle">A arquitetura da sua empresa</h2>
+    <div class="summary" id="resSummary"></div>
+    <div class="flow" id="resFlow"></div>
+    <h3>Como usar o texto abaixo</h3>
+    <ol class="howto">
+      <li><p><b>Abra o Claude Code</b> na pasta da empresa (passo 3).</p></li>
+      <li><p><b>Copie o texto todo</b> com o botão e cole-o no Claude Code. Carregue em Enter.</p></li>
+      <li><p><b>Responda às perguntas que ele fizer.</b> Ele monta a equipa agente a agente e pede autorização antes de instalar ou ligar seja o que for.</p></li>
+      <li><p><b>No fim, peça ao Hermes:</b> "Hermes, o que fazemos hoje?"</p></li>
+    </ol>
+    <div class="code wrap"><pre id="prompt"></pre><button class="copy" type="button" id="copyPrompt">Copiar tudo</button></div>
+    <p class="small">Dica: guarde este texto. Se um dia quiser recomeçar ou montar a mesma equipa noutro computador, basta colá-lo outra vez.</p>
+  </section>
+
+  <div class="nav-btns">
+    <button class="btn" type="button" id="prev">← Anterior</button>
+    <button class="btn primary" type="button" id="next">Seguinte →</button>
+  </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var KEY = "arquiteto-agentes-v1";
+
+  // ---------- Agentes e perguntas ----------
+  var AGENTS = [
+    { id: "anuncios", nome: "Anúncios", desc: "Cria, sobe e otimiza campanhas no Meta e Google. Escreve copy e analisa criativos.", q: [
+      { id: "plataformas", t: "chips", l: "Em que plataformas quer anunciar?", o: ["Meta (Facebook e Instagram)", "Google Pesquisa", "Google Maps", "YouTube"] },
+      { id: "objetivo", t: "select", l: "Objetivo principal", o: ["Receber mensagens no WhatsApp/Messenger", "Formulários de contacto (leads)", "Vendas na loja online", "Visitas à loja física", "Dar a conhecer a marca"] },
+      { id: "orcamento", t: "text", l: "Quanto quer investir por dia?", p: "Ex.: 8 a 9 €" },
+      { id: "zona", t: "text", l: "Zona a atingir", p: "Ex.: concelho de Ponte de Lima, raio de 15 km" },
+      { id: "publico", t: "textarea", l: "Quem é o cliente ideal?", p: "Idade, interesses, o que procura, porque compra a si" },
+      { id: "tom", t: "select", l: "Tom dos textos (copy)", o: ["Próximo e simples", "Profissional", "Divertido", "Premium / sofisticado"] },
+      { id: "bm", t: "select", l: "Já tem Gestor de Negócios (Meta Business) e conta de anúncios?", o: ["Sim", "Não", "Não sei"] },
+      { id: "relatorio", t: "text", l: "Quando quer o relatório diário?", p: "Ex.: todos os dias às 9h30, no email" }
+    ]},
+    { id: "leads", nome: "Leads e atendimento", desc: "Responde ao primeiro contacto, qualifica e passa o cliente pronto à equipa.", q: [
+      { id: "canal", t: "chips", l: "Por onde chegam os contactos?", o: ["WhatsApp", "Messenger/Instagram", "Formulário do site", "Email", "Telefone"] },
+      { id: "perguntas", t: "textarea", l: "Que perguntas faria a um cliente novo?", p: "Ex.: que serviço procura, para quando, orçamento, zona" },
+      { id: "horario", t: "text", l: "Horário de atendimento humano", p: "Ex.: seg-sex 9h-19h" },
+      { id: "passar", t: "text", l: "A quem passa o lead qualificado?", p: "Ex.: ao comercial João, por WhatsApp" },
+      { id: "api", t: "select", l: "Quer usar a API oficial do WhatsApp (WhatsApp Business Platform)?", o: ["Sim", "Não sei, explica-me", "Não"] }
+    ]},
+    { id: "financeiro", nome: "Faturas e financeiro", desc: "Controla faturas, contas a pagar e a receber, alerta prazos e faz o resumo do mês.", q: [
+      { id: "software", t: "text", l: "Que programa de faturação usa?", p: "Ex.: Moloni, InvoiceXpress, PHC, Primavera, Excel" },
+      { id: "controlar", t: "chips", l: "O que quer controlar?", o: ["Faturas emitidas", "Faturas de fornecedores", "Clientes com pagamentos em atraso", "Despesas", "Margens por produto", "Prazos de IVA e Segurança Social"] },
+      { id: "contabilista", t: "select", l: "Envia documentos ao contabilista?", o: ["Sim, todos os meses", "Sim, de vez em quando", "Não tenho contabilista"] },
+      { id: "resumo", t: "text", l: "Como quer o resumo financeiro?", p: "Ex.: uma página por semana com faturado, recebido e em atraso" }
+    ]},
+    { id: "crm", nome: "ERP e CRM", desc: "Cria ou organiza o sistema de clientes, encomendas, stock ou obras.", q: [
+      { id: "tipo", t: "select", l: "O que prefere?", o: ["Criar um sistema à medida", "Organizar o que já uso (Excel, Google Sheets)", "Ligar a um programa que já tenho"] },
+      { id: "modulos", t: "chips", l: "O que precisa de controlar?", o: ["Clientes e contactos", "Funil de vendas", "Orçamentos", "Encomendas", "Stock", "Obras / projetos", "Agenda e marcações", "Equipa e tarefas"] },
+      { id: "quem", t: "text", l: "Quem vai usar o sistema?", p: "Ex.: eu, 2 comerciais e a contabilidade" },
+      { id: "onde", t: "select", l: "Onde quer aceder?", o: ["Só no computador", "Computador e telemóvel", "Online, de qualquer lado"] }
+    ]},
+    { id: "web", nome: "Site e páginas", desc: "Cria o site, landing pages ou loja online a partir das suas respostas.", q: [
+      { id: "tipo", t: "chips", l: "O que precisa?", o: ["Site institucional", "Landing page para anúncios", "Loja online (Shopify)", "Página de marcações"] },
+      { id: "paginas", t: "text", l: "Que páginas deve ter?", p: "Ex.: Início, Serviços, Sobre, Contactos" },
+      { id: "referencias", t: "text", l: "Sites de que gosta (referências)", p: "Cole 2 ou 3 endereços" },
+      { id: "marca", t: "select", l: "Tem logótipo e cores definidas?", o: ["Sim", "Só logótipo", "Não, preciso de ajuda"] }
+    ]},
+    { id: "video", nome: "Editor de vídeo", desc: "Edita os seus vídeos: cortes, legendas, formato vertical, versões para cada rede.", q: [
+      { id: "tipos", t: "chips", l: "Que vídeos faz ou quer fazer?", o: ["Reels / TikTok / Shorts", "Anúncios", "Testemunhos de clientes", "Tutoriais", "Bastidores", "Apresentação de produtos"] },
+      { id: "estilo", t: "select", l: "Estilo de edição", o: ["Dinâmico, cortes rápidos", "Equilibrado", "Calmo, ritmo lento"] },
+      { id: "respiracao", t: "select", l: "Cortar as pausas e respirações?", o: ["Sim, cortar todas", "Só as pausas longas", "Não, manter natural"] },
+      { id: "legendas", t: "select", l: "Legendas no ecrã", o: ["Sim, grandes e animadas", "Sim, simples", "Não"] },
+      { id: "duracao", t: "text", l: "Duração ideal", p: "Ex.: 30 a 45 segundos" },
+      { id: "gravar", t: "select", l: "Tem dificuldade em gravar vídeos?", o: ["Não", "Sim, não sei o que dizer", "Sim, fico nervoso a falar para a câmara", "Sim, falta tempo"] },
+      { id: "musica", t: "select", l: "Música de fundo", o: ["Sim, discreta", "Só em alguns", "Não"] }
+    ]},
+    { id: "conteudo", nome: "Conteúdo e redes", desc: "Planeia e escreve publicações para Instagram, Facebook e LinkedIn.", q: [
+      { id: "redes", t: "chips", l: "Em que redes publica?", o: ["Instagram", "Facebook", "LinkedIn", "TikTok", "YouTube", "Google (Perfil da Empresa)"] },
+      { id: "freq", t: "select", l: "Com que frequência quer publicar?", o: ["1 vez por semana", "3 vezes por semana", "Todos os dias"] },
+      { id: "temas", t: "textarea", l: "Sobre o que quer falar?", p: "Ex.: dicas, novidades, bastidores, promoções" }
+    ]},
+    { id: "suporte", nome: "Suporte a clientes", desc: "Responde a dúvidas de clientes atuais e encaminha os casos difíceis.", q: [
+      { id: "canais", t: "chips", l: "Onde pedem ajuda?", o: ["WhatsApp", "Grupos de WhatsApp", "Email", "Telefone", "Redes sociais"] },
+      { id: "faq", t: "textarea", l: "As 5 perguntas que mais lhe fazem", p: "Uma por linha" },
+      { id: "escalar", t: "text", l: "Quando deve passar para um humano?", p: "Ex.: reclamações, devoluções, valores acima de 200 €" }
+    ]},
+    { id: "admin", nome: "Administrativo e equipa", desc: "Emails, documentos, escalas, propostas e tarefas internas.", q: [
+      { id: "tarefas", t: "chips", l: "O que quer delegar?", o: ["Responder a emails", "Fazer propostas e orçamentos", "Escalas e horários", "Atas e documentos", "Contratos-tipo", "Candidaturas a apoios"] },
+      { id: "notas", t: "textarea", l: "Algo mais sobre a rotina interna?", p: "" }
+    ]}
+  ];
+  var ALWAYS = [
+    { nome: "Hermes (gerente)", desc: "Recebe os seus pedidos, divide pelos agentes e mostra o resultado." },
+    { nome: "Segurança", desc: "Protege acessos, dados, palavras-passe e o servidor. Entra sempre." }
+  ];
+
+  var state = { step: 1, emp: {}, ag: {}, aq: {} };
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved && typeof saved === "object") { state.emp = saved.emp || {}; state.ag = saved.ag || {}; state.aq = saved.aq || {}; } } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify({ emp: state.emp, ag: state.ag, aq: state.aq })); } catch (e) {} }
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  // ---------- Navegação ----------
+  var panels = Array.prototype.slice.call(document.querySelectorAll("section.panel"));
+  var stepsNav = document.getElementById("steps");
+  panels.forEach(function (p) {
+    var n = p.getAttribute("data-step");
+    var b = document.createElement("button");
+    b.type = "button"; b.setAttribute("data-go", n);
+    b.innerHTML = '<span class="n">' + n + '</span><span class="lbl">' + esc(p.getAttribute("data-label")) + "</span>";
+    b.addEventListener("click", function () { go(+n); });
+    stepsNav.appendChild(b);
+  });
+  function go(n) {
+    state.step = Math.max(1, Math.min(panels.length, n));
+    panels.forEach(function (p) { p.hidden = +p.getAttribute("data-step") !== state.step; });
+    Array.prototype.forEach.call(stepsNav.children, function (b) {
+      var k = +b.getAttribute("data-go");
+      if (k === state.step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", k < state.step);
+    });
+    document.getElementById("progress").textContent = "Passo " + state.step + " de " + panels.length;
+    document.getElementById("prev").style.visibility = state.step === 1 ? "hidden" : "visible";
+    var nx = document.getElementById("next");
+    nx.style.visibility = state.step === panels.length ? "hidden" : "visible";
+    nx.textContent = state.step === panels.length - 1 ? "Ver o meu plano →" : "Seguinte →";
+    if (state.step >= 7) renderResults();
+    try { history.replaceState(null, "", "#passo" + state.step); } catch (e) {}
+    var m = document.getElementById("main"); if (m && m.scrollIntoView && window.scrollY > 200) m.scrollIntoView({ block: "start" });
+  }
+  document.getElementById("prev").addEventListener("click", function () { go(state.step - 1); });
+  document.getElementById("next").addEventListener("click", function () { go(state.step + 1); });
+
+  // ---------- Tabs ----------
+  document.querySelectorAll(".tab").forEach(function (t) {
+    t.addEventListener("click", function () {
+      var g = t.getAttribute("data-tabgroup"), k = t.getAttribute("data-tab");
+      document.querySelectorAll('.tab[data-tabgroup="' + g + '"]').forEach(function (x) { x.setAttribute("aria-selected", x === t ? "true" : "false"); });
+      document.querySelectorAll('[data-tabpanel="' + g + '"]').forEach(function (p) { p.hidden = p.getAttribute("data-tab") !== k; });
+    });
+  });
+  if (/Win/i.test(navigator.platform || "")) { var wt = document.getElementById("tab-win"); }
+
+  // ---------- Copiar ----------
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest && ev.target.closest(".copy"); if (!b) return;
+    var pre = b.parentNode.querySelector("pre"); if (!pre) return;
+    var txt = pre.textContent;
+    var done = function () { var o = b.textContent; b.textContent = "Copiado"; b.classList.add("done"); setTimeout(function () { b.textContent = o; b.classList.remove("done"); }, 1800); };
+    var fallback = function () { var r = document.createRange(); r.selectNodeContents(pre); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Selecionado: Ctrl/Cmd+C"; };
+    try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(txt).then(done, fallback); } else { fallback(); } } catch (e) { fallback(); }
+  });
+
+  // ---------- Formulário empresa ----------
+  var fe = document.getElementById("formEmpresa");
+  function fillForm(form, data) {
+    Array.prototype.forEach.call(form.elements, function (el) {
+      if (!el.name) return;
+      var v = data[el.name];
+      if (el.type === "checkbox") el.checked = Array.isArray(v) && v.indexOf(el.value) >= 0;
+      else if (v != null) el.value = v;
+    });
+  }
+  function readForm(form) {
+    var d = {};
+    Array.prototype.forEach.call(form.elements, function (el) {
+      if (!el.name) return;
+      if (el.type === "checkbox") { d[el.name] = d[el.name] || []; if (el.checked) d[el.name].push(el.value); }
+      else d[el.name] = el.value.trim();
+    });
+    return d;
+  }
+  fillForm(fe, state.emp);
+  fe.addEventListener("input", function () { state.emp = readForm(fe); save(); });
+  fe.addEventListener("change", function () { state.emp = readForm(fe); save(); });
+  fe.addEventListener("submit", function (e) { e.preventDefault(); });
+
+  // ---------- Agentes ----------
+  var list = document.getElementById("agentList");
+  ALWAYS.forEach(function (a) {
+    var el = document.createElement("label"); el.className = "agent locked";
+    el.innerHTML = '<input type="checkbox" checked disabled><div><div class="t">' + esc(a.nome) + ' <span class="tag">sempre</span></div><div class="d">' + esc(a.desc) + "</div></div>";
+    list.appendChild(el);
+  });
+  AGENTS.forEach(function (a) {
+    var el = document.createElement("label"); el.className = "agent";
+    el.innerHTML = '<input type="checkbox" id="ag-' + a.id + '" data-agent="' + a.id + '"><div><div class="t">' + esc(a.nome) + '</div><div class="d">' + esc(a.desc) + "</div></div>";
+    list.appendChild(el);
+    el.querySelector("input").checked = !!state.ag[a.id];
+  });
+  var qbox = document.getElementById("agentQuestions");
+  function renderQuestions() {
+    qbox.innerHTML = "";
+    AGENTS.forEach(function (a) {
+      if (!state.ag[a.id]) return;
+      var ans = state.aq[a.id] || {};
+      var box = document.createElement("div"); box.className = "sub";
+      var h = '<h3>' + esc(a.nome) + ' <span class="tag">perguntas</span></h3>';
+      a.q.forEach(function (q) {
+        var fid = "q-" + a.id + "-" + q.id, v = ans[q.id];
+        if (q.t === "chips") {
+          h += '<div class="f"><span class="q" id="' + fid + '-l">' + esc(q.l) + '</span><div class="chips" role="group" aria-labelledby="' + fid + '-l">';
+          q.o.forEach(function (o, i) {
+            var on = Array.isArray(v) && v.indexOf(o) >= 0;
+            h += '<label class="chip"><input type="checkbox" id="' + fid + '-' + i + '" data-a="' + a.id + '" data-q="' + q.id + '" value="' + esc(o) + '"' + (on ? " checked" : "") + '><span>' + esc(o) + "</span></label>";
+          });
+          h += "</div></div>";
+        } else if (q.t === "select") {
+          h += '<div class="f"><label for="' + fid + '">' + esc(q.l) + '</label><select id="' + fid + '" data-a="' + a.id + '" data-q="' + q.id + '"><option value="">Escolha…</option>';
+          q.o.forEach(function (o) { h += "<option" + (v === o ? " selected" : "") + ">" + esc(o) + "</option>"; });
+          h += "</select></div>";
+        } else if (q.t === "textarea") {
+          h += '<div class="f"><label for="' + fid + '">' + esc(q.l) + '</label><textarea id="' + fid + '" data-a="' + a.id + '" data-q="' + q.id + '" placeholder="' + esc(q.p || "") + '">' + esc(v || "") + "</textarea></div>";
+        } else {
+          h += '<div class="f"><label for="' + fid + '">' + esc(q.l) + '</label><input type="text" id="' + fid + '" data-a="' + a.id + '" data-q="' + q.id + '" placeholder="' + esc(q.p || "") + '" value="' + esc(v || "") + '"></div>';
+        }
+      });
+      box.innerHTML = h;
+      qbox.appendChild(box);
+    });
+  }
+  function onAgentInput(ev) {
+    var t = ev.target;
+    if (t.hasAttribute("data-agent")) { state.ag[t.getAttribute("data-agent")] = t.checked; renderQuestions(); save(); return; }
+    var a = t.getAttribute("data-a"), q = t.getAttribute("data-q"); if (!a || !q) return;
+    state.aq[a] = state.aq[a] || {};
+    if (t.type === "checkbox") {
+      var cur = Array.isArray(state.aq[a][q]) ? state.aq[a][q] : [];
+      cur = cur.filter(function (x) { return x !== t.value; }); if (t.checked) cur.push(t.value);
+      state.aq[a][q] = cur;
+    } else state.aq[a][q] = t.value;
+    save();
+  }
+  var fa = document.getElementById("formAgentes");
+  fa.addEventListener("change", onAgentInput);
+  fa.addEventListener("input", function (ev) { if (ev.target.type !== "checkbox") onAgentInput(ev); });
+  fa.addEventListener("submit", function (e) { e.preventDefault(); });
+  renderQuestions();
+
+  // ---------- Recomendações ----------
+  function chosen() { return AGENTS.filter(function (a) { return state.ag[a.id]; }); }
+  function needs() {
+    var e = state.emp, ag = state.ag, c = chosen().length;
+    var big = /16 a 50|Mais de 50/.test(e.pessoas || ""), mid = /6 a 15/.test(e.pessoas || "");
+    var publico = /Câmara|entidade pública/.test(e.setor || "");
+    var plan, planWhy;
+    if (publico) { plan = "Team ou Enterprise"; planWhy = "Entidade pública: precisa de contas por pessoa, faturação central e controlo de acessos."; }
+    else if (big) { plan = "Team (lugares Premium para quem usa o Claude Code)"; planWhy = "Várias pessoas a usar: cada uma com a sua conta e faturação central."; }
+    else if (c >= 6 || (ag.video && c >= 4)) { plan = "Max 20x · 200 USD/mês"; planWhy = "Muitos agentes ativos e edição de vídeo gastam muito uso."; }
+    else if (c >= 3 || ag.video || mid) { plan = "Max 5x · 100 USD/mês"; planWhy = "Vários agentes todos os dias. Comece aqui e suba se bater no limite."; }
+    else { plan = "Pro · 20 USD/mês"; planWhy = "Para começar com 1 ou 2 agentes. Suba para Max quando usar todos os dias."; }
+    var vps = !!(ag.leads || ag.suporte || ag.anuncios || (ag.crm && /Online/.test((state.aq.crm || {}).onde || "")));
+    var semSite = /Não tenho/.test(e.site || "") || /Não tenho nenhum|Só o domínio|Não sei/.test(e.dominio || "");
+    var hosting = !!(ag.web && (semSite || /refeito/.test(e.site || ""))) || /Não tenho/.test(e.site || "");
+    var planKey = publico ? "ent" : big ? "team" : /20x/.test(plan) ? "max20" : /5x/.test(plan) ? "max5" : "pro";
+    return { plan: plan, planWhy: planWhy, planKey: planKey, vps: vps, hosting: hosting, metaMcp: !!ag.anuncios && /Meta/.test(((state.aq.anuncios || {}).plataformas || []).join(" ") || "Meta"), googleMcp: !!ag.anuncios && /Google|YouTube/.test(((state.aq.anuncios || {}).plataformas || []).join(" ")), chrome: true };
+  }
+
+  function card(k, v, s) { return '<div class="card"><span class="small">' + esc(k) + '</span><div class="v">' + esc(v) + '</div>' + (s ? '<p class="small">' + esc(s) + "</p>" : "") + "</div>"; }
+
+  function renderResults() {
+    var n = needs(), e = state.emp, ag = chosen();
+    // plano
+    document.querySelectorAll("#plansBody tr").forEach(function (tr) { tr.classList.toggle("rec", tr.getAttribute("data-plan") === n.planKey); });
+    var ph = document.getElementById("planHint");
+    if (e.setor || ag.length) ph.innerHTML = "<b>A nossa sugestão para si: " + esc(n.plan) + "</b><p>" + esc(n.planWhy) + "</p>";
+    // infra
+    document.getElementById("infraNeeds").innerHTML =
+      card("VPS 24h", n.vps ? "Precisa" : "Opcional", n.vps ? "Tem agentes que trabalham sozinhos (atendimento, relatórios)." : "Pode começar só no seu computador.") +
+      card("Domínio e alojamento", n.hosting ? "Precisa" : "Não precisa agora", n.hosting ? "Para publicar o site novo." : "Já tem, ou não escolheu o agente Web.") +
+      card("Conector Meta Ads", n.metaMcp ? "Instalar" : "Não precisa", "") +
+      card("Conector Google Ads", n.googleMcp ? "Instalar" : "Não precisa", "");
+    // resumo
+    var nome = e.nome || "a sua empresa";
+    document.getElementById("resTitle").textContent = "A arquitetura de " + nome;
+    document.getElementById("resSummary").innerHTML =
+      card("Plano Claude", n.plan, n.planWhy) +
+      card("Agentes", String(ag.length + 2), "Hermes, Segurança" + (ag.length ? " e " + ag.map(function (a) { return a.nome; }).join(", ") : "")) +
+      card("Servidor (VPS)", n.vps ? "Sim" : "Opcional", "") +
+      card("Site novo", n.hosting ? "Sim" : "Não", "");
+    var fl = '<span>Você</span><i>→</i><span>Hermes</span><i>→</i>';
+    fl += ["Segurança"].concat(ag.map(function (a) { return a.nome; })).map(function (x) { return "<span>" + esc(x) + "</span>"; }).join("");
+    document.getElementById("resFlow").innerHTML = fl;
+    document.getElementById("prompt").textContent = buildPrompt(n);
+  }
+
+  function val(x) { if (Array.isArray(x)) return x.length ? x.join(", ") : "(não respondido)"; return x ? x : "(não respondido)"; }
+
+  function buildPrompt(n) {
+    var e = state.emp, ag = chosen(), L = [];
+    L.push("# Missão: montar a equipa de agentes de IA da " + (e.nome || "minha empresa"));
+    L.push("");
+    L.push("Tu és o ARQUITETO. A tua missão é montar, dentro desta pasta, uma equipa de agentes no Claude Code para a minha empresa, com um gerente chamado Hermes. Eu sou leigo em tecnologia: fala comigo em português de Portugal, frases curtas, sem jargão, e explica cada termo técnico na primeira vez que o usares.");
+    L.push("");
+    L.push("## Regras de trabalho");
+    L.push("- Faz UMA pergunta de cada vez e espera pela minha resposta.");
+    L.push("- Antes de instalar, ligar contas, gastar dinheiro ou apagar seja o que for, explica o que vais fazer e pede a minha autorização.");
+    L.push("- Nunca me peças palavras-passe, códigos de cartão ou dados bancários na conversa. Logins faço eu no navegador.");
+    L.push("- Trabalha por fases. No fim de cada fase, mostra um resumo do que ficou feito e do que falta.");
+    L.push("- Se uma resposta abaixo estiver '(não respondido)' ou vaga, pergunta-me antes de inventar.");
+    L.push("");
+    L.push("## Perfil da empresa (respostas do questionário)");
+    L.push("- Nome: " + val(e.nome));
+    L.push("- Localização: " + val(e.local));
+    L.push("- Tipo de negócio: " + val(e.setor));
+    L.push("- Pessoas na empresa: " + val(e.pessoas));
+    L.push("- O que vende e a quem: " + val(e.oque));
+    L.push("- Valor médio de venda: " + val(e.ticket));
+    L.push("- À vontade com tecnologia: " + val(e.tecnico));
+    L.push("- Como chegam os clientes hoje: " + val(e.canais));
+    L.push("- Programas que já usa: " + val(e.ferramentas));
+    L.push("- Site: " + val(e.site) + " · Domínio/alojamento: " + val(e.dominio));
+    L.push("- Maior gargalo: " + val(e.gargalo));
+    L.push("- Maior problema: " + val(e.dor));
+    L.push("- Tarefas repetitivas: " + val(e.repetitivo) + " (" + (e.horas ? e.horas + " h/semana" : "horas não indicadas") + ")");
+    L.push("- Objetivo a 6 meses: " + val(e.objetivo));
+    L.push("");
+    L.push("## Agentes escolhidos");
+    L.push("- Hermes (gerente / orquestrador) — obrigatório");
+    L.push("- Segurança — obrigatório");
+    ag.forEach(function (a) {
+      L.push("- " + a.nome + ": " + a.desc);
+      var ans = state.aq[a.id] || {};
+      a.q.forEach(function (q) { L.push("    - " + q.l + " " + val(ans[q.id])); });
+    });
+    if (!ag.length) L.push("- (nenhum agente extra escolhido: pergunta-me qual é a primeira tarefa que quero tirar das minhas mãos e propõe 2 ou 3 agentes)");
+    L.push("");
+    L.push("## Recomendações já calculadas");
+    L.push("- Plano Claude sugerido: " + n.plan + " (" + n.planWhy + ")");
+    L.push("- VPS 24h: " + (n.vps ? "sim, necessária" : "opcional por agora"));
+    L.push("- Domínio e alojamento novos: " + (n.hosting ? "sim" : "não por agora"));
+    L.push("");
+    L.push("## FASE 0 — Diagnóstico (antes de criar ficheiros)");
+    L.push("1. Resume-me em 5 linhas o que percebeste da empresa e confirma comigo.");
+    L.push("2. Faz-me as perguntas que faltam para cada agente escolhido (no máximo 5 por agente, uma de cada vez).");
+    L.push("3. Propõe a ordem de implementação: começa pelo agente que resolve o maior gargalo.");
+    L.push("");
+    L.push("## FASE 1 — Estrutura da equipa");
+    L.push("Cria esta estrutura e explica-me cada ficheiro numa frase:");
+    L.push("- CLAUDE.md — o 'cérebro' da empresa: perfil, tom de voz, regras, quem é quem, o que nunca fazer.");
+    L.push("- .claude/agents/hermes.md — subagente gerente: recebe pedidos, decide que agente usa, junta os resultados, pede-me aprovação para tudo o que gasta dinheiro ou fala com clientes.");
+    L.push("- .claude/agents/<agente>.md — um subagente por cada agente escolhido, com função, ferramentas permitidas e limites.");
+    L.push("- .claude/skills/<agente>/SKILL.md — o manual passo a passo de cada tarefa repetível (ex.: 'subir-campanha', 'qualificar-lead', 'relatorio-diario', 'editar-video').");
+    L.push("- docs/seguranca.md, docs/infraestrutura.md, docs/como-usar.md — este último em linguagem simples, para eu e a minha equipa.");
+    L.push("- .claude/settings.json — permissões seguras (ver Fase 2).");
+    L.push("Escreve cada SKILL.md com: quando usar, passo a passo, exemplos com os dados reais da empresa, e o que verificar antes de dar a tarefa por terminada.");
+    L.push("");
+    L.push("## FASE 2 — Segurança (agente Segurança)");
+    L.push("- Em .claude/settings.json, bloqueia a leitura e escrita de ficheiros .env, chaves, pastas .ssh e credenciais; pede confirmação antes de comandos que apagam ou instalam.");
+    L.push("- Guarda tokens e chaves só em ficheiros .env locais, fora de qualquer partilha, e explica-me como fazer cópia de segurança.");
+    L.push("- Recomenda um perfil do Chrome só para trabalho com IA, autenticação de 2 fatores em Meta, Google, email e alojamento, e um gestor de palavras-passe.");
+    L.push("- Define acessos mínimos: cada conector com o nível mais baixo que chega para a tarefa (começar em só leitura).");
+    L.push("- Escreve em docs/seguranca.md uma lista de verificação mensal (acessos, cópias de segurança, atualizações).");
+    if (n.vps) {
+      L.push("");
+      L.push("## FASE 3 — Servidor VPS 24h");
+      L.push("- Explica-me o que é uma VPS e guia-me a comprar uma (referência: Hostinger KVM 2, Ubuntu 24.04, centro de dados na Europa).");
+      L.push("- Depois guia-me a ligar por SSH com chave (sem palavra-passe), criar utilizador sem privilégios de root, ativar firewall (só portas necessárias), fail2ban e atualizações automáticas de segurança.");
+      L.push("- Instala o Claude Code no servidor e explica como os agentes que precisam de estar sempre ligados vão correr lá (tarefas agendadas, atendimento).");
+    }
+    if (n.hosting) {
+      L.push("");
+      L.push("## FASE — Domínio e alojamento");
+      L.push("- Ajuda-me a escolher o nome de domínio (.pt de preferência) e a comprá-lo com alojamento (ex.: Amen.pt), ou a alojar na VPS se fizer mais sentido.");
+      L.push("- Configura DNS, certificado SSL (https) e email profissional com o domínio.");
+    }
+    L.push("");
+    L.push("## FASE — Navegador");
+    L.push("- Verifica se a extensão Claude in Chrome está instalada e ligada (/chrome). Se não estiver, guia-me a instalar e testar.");
+    if (n.metaMcp) {
+      L.push("");
+      L.push("## FASE — Conector Meta Ads");
+      L.push("- Verifica se tenho Gestor de Negócios, conta de anúncios, Página e Instagram ligados. Se faltar algo, guia-me clique a clique no navegador.");
+      L.push("- Adiciona o conector oficial: claude mcp add --transport http meta-ads https://mcp.facebook.com/ads e guia-me na autorização (/mcp). Começa com acesso de só leitura.");
+      L.push("- Se a conta ainda não tiver acesso ao conector (está em beta), usa a ferramenta oficial meta-ads-cli (pip install meta-ads-cli; meta auth login) ou o navegador.");
+      L.push("- Regra: tudo o que crias no Meta fica EM PAUSA até eu aprovar. Nunca alteres orçamentos sem a minha autorização.");
+    }
+    if (n.googleMcp) {
+      L.push("");
+      L.push("## FASE — Conector Google Ads");
+      L.push("- Explica-me que o conector oficial da Google (github.com/googleads/google-ads-mcp) só lê dados, e o que é preciso: developer token, projeto Google Cloud com a Google Ads API, credenciais OAuth.");
+      L.push("- Guia-me a obter cada um no navegador e instala o conector com claude mcp add google-ads (variáveis de ambiente no .env, nunca no chat).");
+      L.push("- Para criar campanhas, usa o navegador (Claude in Chrome) com a minha supervisão.");
+    }
+    ag.forEach(function (a) {
+      var x = state.aq[a.id] || {};
+      L.push("");
+      L.push("## FASE — Agente " + a.nome);
+      if (a.id === "anuncios") {
+        L.push("- Skills: escrever-copy (3 variações por anúncio, no tom escolhido), analisar-criativo (o que melhorar num vídeo/imagem antes de subir), subir-campanha (objetivo, zona, orçamento, público, criativos, em pausa), relatorio-diario (gasto, resultados, custo por resultado, o que mudar).");
+        L.push("- Lembra-te: no Meta, a localização inclui quem passou recentemente pela zona. Qualifica no anúncio ('para quem mora em…'), idioma português e uma pergunta de zona no formulário.");
+        L.push("- Agenda o relatório para: " + val(x.relatorio) + ".");
+      } else if (a.id === "leads") {
+        L.push("- Skills: qualificar-lead (as perguntas indicadas, uma de cada vez, tom simpático), passar-lead (resumo para a pessoa responsável), seguimento (lembrete a quem não respondeu em 24 h).");
+        L.push("- Se escolhi a API oficial do WhatsApp, explica-me o que é a WhatsApp Business Platform, os custos por conversa e guia-me no registo. Nunca uses soluções não oficiais que possam bloquear o número.");
+      } else if (a.id === "financeiro") {
+        L.push("- Skills: registar-documento (organizar faturas por mês e tipo), contas-em-atraso (lista e mensagem educada de lembrete para eu aprovar), resumo-financeiro, calendario-fiscal (prazos de IVA e Segurança Social — confirma sempre as datas no Portal das Finanças).");
+        L.push("- Se o programa de faturação tiver API, propõe ligá-lo; se não, trabalha com exportações em Excel/CSV.");
+      } else if (a.id === "crm") {
+        L.push("- Desenha comigo o sistema antes de construir: que ecrãs, que campos, quem vê o quê. Mostra-me um esboço e só depois constrói.");
+        L.push("- Se for à medida, cria uma aplicação web simples com base de dados, login por utilizador e cópias de segurança diárias" + (n.vps ? ", alojada na VPS." : "."));
+      } else if (a.id === "web") {
+        L.push("- Faz-me perguntas de briefing (público, mensagem principal, chamada à ação, fotografias disponíveis), mostra uma primeira versão e itera comigo.");
+        L.push("- Inclui: telemóvel primeiro, carregamento rápido, SEO local, botão de WhatsApp, política de privacidade e cookies (RGPD), e Pixel do Meta / Google Tag se houver anúncios.");
+      } else if (a.id === "video") {
+        L.push("- Instala as ferramentas de edição necessárias (ex.: ffmpeg, transcrição automática) e explica-me cada uma.");
+        L.push("- Skill editar-video: estilo " + val(x.estilo) + "; pausas e respirações: " + val(x.respiracao) + "; legendas: " + val(x.legendas) + "; duração: " + val(x.duracao) + "; música: " + val(x.musica) + ". Exporta 9:16 para Reels/TikTok e 1:1 ou 4:5 para feed.");
+        L.push("- Dificuldade em gravar: " + val(x.gravar) + ". Se houver dificuldade, cria também a skill roteiro-de-video (guião curto com gancho nos 3 primeiros segundos) e dá-me dicas simples para gravar com o telemóvel.");
+      } else if (a.id === "conteudo") {
+        L.push("- Skills: calendario-editorial (mês a mês), escrever-publicacao (adaptar o mesmo conteúdo a cada rede), reaproveitar-video (um vídeo vira várias publicações).");
+      } else if (a.id === "suporte") {
+        L.push("- Cria uma base de conhecimento (docs/faq.md) a partir das perguntas frequentes e responde só com o que lá está. Casos fora disso passam para um humano.");
+      } else if (a.id === "admin") {
+        L.push("- Cria modelos (propostas, orçamentos, emails) com os dados da empresa e uma skill para cada tarefa delegada.");
+      }
+    });
+    L.push("");
+    L.push("## FASE FINAL — Entrega");
+    L.push("- Testa cada agente com um caso real e mostra-me o resultado.");
+    L.push("- Escreve docs/como-usar.md com os 10 pedidos mais úteis para dizer ao Hermes (ex.: 'Hermes, prepara o relatório da semana').");
+    L.push("- Diz-me o que fazer todos os dias (5 minutos), todas as semanas e todos os meses.");
+    L.push("");
+    L.push("Começa agora pela FASE 0.");
+    return L.join("\n");
+  }
+
+  // ---------- Arranque ----------
+  var h = (location.hash || "").match(/passo(\d)/);
+  go(h ? +h[1] : 1);
+})();
+</script>
+
+</body>
+</html>
