@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vendas na Era da IA · Nedson Aliandro</title>
+<meta name="description" content="Palestra de Nedson Aliandro (Upmax Pro) sobre aquisição de clientes, agentes de IA e sites na era da IA.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Sans:wght@400;600;700&display=swap">
+<style>
+html,body{margin:0;height:100%;background:#0b0c0f;overflow:hidden;font-family:'DM Sans',Arial,sans-serif}
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;width:1920px;height:1080px;transform-origin:center center;flex:none}
+#stage section{position:absolute;left:0;top:0;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
+#stage section.on{opacity:1;visibility:visible}
+#stage section *{box-sizing:border-box}
+#stage h1,#stage h2,#stage h3,#stage p{margin:0}
+#stage h1{font-size:96px;font-weight:600;line-height:1.1}
+#stage h2{font-size:64px;font-weight:600;line-height:1.15}
+#stage h3{font-size:44px;font-weight:600;line-height:1.2}
+#stage p{font-size:32px;line-height:1.4}
+#stage img,#stage video{display:block;object-fit:cover;max-width:none}
+#stage svg{flex:none}
+x-icon,x-shape{display:block;flex:none}
+#stage a{color:inherit;text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px}
+x-icon svg,x-shape svg{width:100%;height:100%;display:block}
+x-connector{display:block}
+.ctl{position:fixed;bottom:16px;right:16px;display:flex;gap:8px;align-items:center;z-index:5;font:600 14px 'DM Sans',Arial,sans-serif;color:#C9C4BB;opacity:.35;transition:opacity .2s}
+.ctl:hover,.ctl:focus-within{opacity:1}
+.ctl button{all:unset;cursor:pointer;width:40px;height:40px;border-radius:50%;background:#22252C;color:#F6F3EE;display:grid;place-items:center;font-size:18px}
+.ctl button:focus-visible{outline:2px solid #E8692C}
+.ctl span{font-variant-numeric:tabular-nums;min-width:56px;text-align:center}
+.hint{position:fixed;left:16px;bottom:16px;font:500 13px 'DM Sans',Arial,sans-serif;color:#8C8A85;opacity:.6}
+@media (prefers-reduced-motion:reduce){#stage section{transition:none}}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage"><section id="cover" data-transition="fade" style="background:#15171C;color:#F6F3EE;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:end;gap:24px">
+<img src="assets/capa.jpg" alt="Empresário a apertar a mão a um robô num escritório ao pôr do sol" style="position:absolute;left:0px;top:0px;width:1920px;height:1080px;object-fit:cover">
+<div style="position:absolute;left:0px;top:0px;width:1920px;height:1080px;background:linear-gradient(to top, rgba(21,23,28,0.96) 0%, rgba(21,23,28,0.75) 35%, rgba(21,23,28,0) 65%)"></div>
+<p style="font-size:26px;letter-spacing:4px;text-transform:uppercase;color:#E8692C;font-weight:600">Palestra · Outubro 2026</p>
+<h1 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:140px;font-weight:700;line-height:0.98;letter-spacing:-3px">Vendas na era da <span style="color:#E8692C">IA</span></h1>
+<p style="font-size:32px;color:#E6E1D8">Nedson Aliandro · Upmax Pro</p>
+
+</section>
+<section id="sobre" data-transition="fade" style="background:#0e0f13">
+  <img src="assets/retrato.jpg" alt="Retrato de Nedson Aliandro de blazer azul, com um portátil debaixo do braço" style="position:absolute; top:50%; left:1223.67px; width:715.12px; height:1154.24px; transform:translateY(-50%)">
+  <div id="p5f5bf91b7a19r0-fbb1085a" style="position:absolute; top:128px; left:128px; width:1060px; height:214px; display:flex; flex-direction:column; gap:16px">
+    <p style="font-family:'DM Sans', Arial, sans-serif; font-size:26px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:#e8692c">Quem sou</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:96px; font-weight:700; line-height:1.05; color:#f6f3ee">Nedson Aliandro</h2>
+    <p style="font-family:'DM Sans', Arial, sans-serif; font-size:32px; color:#c9c4bb">Brasileiro / uruguaio · Casado · A viver em Ponte de Lima</p>
+  </div>
+  <div id="p5f5bf91b7a19r2-fbb1085a" style="position:absolute; top:775px; left:128px; width:1060px; height:177px; display:grid; gap:32px; grid-template-columns:1fr 1fr 1fr">
+    <div style="display:flex; flex-direction:column; gap:12px; padding:32px 0 0; border-top:4px solid #e8692c">
+      <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:56px; font-weight:700; line-height:1; color:#f6f3ee">1,5 M€</p>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:26px; line-height:1.4; color:#c9c4bb">geridos em anúncios em Portugal</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:12px; padding:32px 0 0; border-top:4px solid #e8692c">
+      <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:56px; font-weight:700; line-height:1; color:#f6f3ee">6 lojas</p>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:26px; line-height:1.4; color:#c9c4bb">online em dropshipping: Europa, EUA e Canadá</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:12px; padding:32px 0 0; border-top:4px solid #e8692c">
+      <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:56px; font-weight:700; line-height:1; color:#f6f3ee">Upmax Pro</p>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:26px; line-height:1.4; color:#c9c4bb">Fundador · UPTEC Porto · Google e Meta Partner</p>
+    </div>
+  </div>
+  <img src="assets/qr-upmaxpro.png" alt="QR code para upmaxpro.pt" id="p5f5bf91b7a19r1_0-fbb1085a" style="position:absolute; top:975.2px; left:959.71px; width:85.55px; height:81.1px; border-radius:12px; object-fit:contain">
+  
+</section>
+<section id="aquisicao" data-transition="fade" style="background:#F6F3EE;color:#15171C;font-family:'DM Sans', Arial, sans-serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:26px;letter-spacing:4px;text-transform:uppercase;color:#C2501A;font-weight:600">Canais de aquisição</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:72px;font-weight:700;line-height:1.1">Como chegam os clientes em Ponte de Lima?</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;flex:1">
+<div style="display:flex;flex-direction:column;gap:20px;background:#FFFFFF;border:1px solid #E2DDD4;border-radius:24px;padding:32px">
+<img src="assets/passa-palavra.jpg" alt="Senhor numa rua de Ponte de Lima a apontar uma loja a uma jovem" style="width:100%;height:340px;object-fit:cover;border-radius:16px">
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:700">Passa-palavra</h3>
+<p style="font-size:28px;line-height:1.35;color:#4A4F57">Cliente quente, mas sem previsibilidade.</p>
+<p style="font-size:32px;font-weight:600;color:#C2501A">0 €</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px;background:#FFFFFF;border:1px solid #E2DDD4;border-radius:24px;padding:32px">
+<img src="assets/organico.jpg" alt="Três vídeos verticais de uma lojista a mostrar uma camisa: Reels, TikTok e LinkedIn" style="width:100%;height:340px;object-fit:contain;border-radius:16px;background:#F5F2F1">
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:700">Orgânico</h3>
+<p style="font-size:28px;line-height:1.35;color:#4A4F57">O mesmo vídeo nas 3 redes. Só vê quem o algoritmo quer.</p>
+<p style="font-size:32px;font-weight:600;color:#C2501A">0 €</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px;background:#15171C;color:#F6F3EE;border-radius:24px;padding:32px">
+<div style="height:340px;border-radius:16px;background:#22252C;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:104px;font-weight:700;line-height:1;color:#E8692C">20–25 mil</p>
+<p style="font-size:28px;color:#C9C4BB">pessoas alcançadas</p>
+</div>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:700">Meta Ads</h3>
+<p style="font-size:28px;line-height:1.35;color:#C9C4BB">Investindo 8–9 € por dia, durante 1 mês, em Ponte de Lima.</p>
+<p style="font-size:32px;font-weight:600;color:#E8692C">≈ 255 €/mês</p>
+</div>
+</div>
+
+</section>
+<section id="canais" data-transition="fade" style="background:#F6F3EE;color:#15171C;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:26px;letter-spacing:4px;text-transform:uppercase;color:#C2501A;font-weight:600">Aquisição de clientes</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:700;line-height:1.1">Dois canais, duas lógicas diferentes</h2>
+</div>
+<div style="display:flex;gap:32px;flex:1">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFFFF;border:1px solid #E2DDD4;border-radius:24px;padding:36px 40px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:20px">
+<div style="display:flex;align-items:center;gap:20px">
+<svg aria-label="Logótipo Google Ads" width="64" height="64" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#34A853" d="M3.9998 22.9291C1.7908 22.9291 0 21.1383 0 18.9293s1.7908-3.9998 3.9998-3.9998 3.9998 1.7908 3.9998 3.9998-1.7908 3.9998-3.9998 3.9998z"/><path fill="#4285F4" d="M23.4641 16.9287L15.4632 3.072C14.3586 1.1587 11.9121.5028 9.9988 1.6074S7.4295 5.1585 8.5341 7.0718l8.0009 13.8567c1.1046 1.9133 3.5511 2.5679 5.4644 1.4646 1.9134-1.1046 2.568-3.5511 1.4647-5.4644z"/><path fill="#FBBC04" d="M7.5137 4.8438L1.5645 15.1484A4.5 4.5 0 0 1 4 14.4297c2.5597-.0075 4.6248 2.1585 4.4941 4.7148l3.2168-5.5723-3.6094-6.25c-.4499-.7793-.6322-1.6394-.5878-2.4784z"/></svg>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:56px;font-weight:700;line-height:1.1">Google Ads</h3>
+</div>
+<p style="font-size:28px;font-weight:600;color:#FFFFFF;background:#15171C;border-radius:40px;padding:8px 24px">Intenção</p>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4A4F57">A pessoa já está à procura. Lead mais qualificado, normalmente mais caro.</p>
+<div style="display:flex;flex-direction:column;gap:16px;background:#F7F8FA;border:1px solid #DADCE0;border-radius:16px;padding:24px">
+<div style="display:flex;align-items:center;gap:16px;background:#FFFFFF;border:1px solid #DADCE0;border-radius:40px;padding:12px 24px">
+<x-icon name="Search" style="color:#5F6368;width:32px;height:32px"></x-icon>
+<p style="font-size:26px;color:#202124">dentista ponte de lima</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;padding:0 8px">
+<p style="font-size:24px;color:#202124"><b>Patrocinado</b> · clinicalima.pt</p>
+<p style="font-size:30px;line-height:1.25;color:#1A4FB5">Dentista em Ponte de Lima · Marque Hoje</p>
+<p style="font-size:24px;line-height:1.35;color:#4D5156">Avaliação gratuita. Urgências no próprio dia. Estacionamento próprio.</p>
+</div>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#15171C;color:#F6F3EE;border-radius:24px;padding:36px 40px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:20px">
+<div style="display:flex;align-items:center;gap:20px">
+<svg aria-label="Logótipo Meta" width="72" height="72" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#0A7CFF" d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.320l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.930-4.716-2.930-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z"/></svg>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:56px;font-weight:700;line-height:1.1">Meta Ads</h3>
+</div>
+<p style="font-size:28px;font-weight:600;color:#15171C;background:#E8692C;border-radius:40px;padding:8px 24px">Desejo</p>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#C9C4BB">A pessoa não estava à procura. Precisa de filtros e de uma página bem estruturada.</p>
+<div style="display:flex;gap:20px;background:#FFFFFF;color:#1C1E21;border-radius:16px;padding:20px">
+<div style="position:relative;width:300px;height:280px;flex:none;border-radius:12px;overflow:hidden;background:linear-gradient(160deg, #F2B8A0 0%, #C2501A 60%, #3A1F14 100%)">
+<p style="position:absolute;left:24px;top:24px;width:252px;font-family:'Space Grotesk', Arial, sans-serif;font-size:28px;font-weight:700;line-height:1.1;color:#FFFFFF;text-transform:uppercase">Sorriso novo antes do Natal</p>
+<x-shape kind="ellipse" style="position:absolute;left:110px;top:110px;width:80px;height:80px;background:#FFFFFF;opacity:0.9"></x-shape>
+<x-icon name="Play" style="position:absolute;left:132px;top:132px;width:36px;height:36px;color:#1C1E21"></x-icon>
+<p style="position:absolute;left:24px;top:206px;width:200px;font-size:24px;color:#FFFFFF">0:07 / 0:15</p>
+<div style="position:absolute;left:24px;top:250px;width:252px;height:6px;background:rgba(255,255,255,0.35);border-radius:3px"></div>
+<div style="position:absolute;left:24px;top:250px;width:118px;height:6px;background:#FFFFFF;border-radius:3px"></div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:12px">
+<x-shape kind="ellipse" style="background:#E8692C;width:44px;height:44px"></x-shape>
+<div style="display:flex;flex-direction:column">
+<p style="font-size:24px;font-weight:600">Clínica Lima</p>
+<p style="font-size:24px;color:#65676B">Patrocinado</p>
+</div>
+</div>
+<p style="font-size:24px;line-height:1.35">Sorriso novo antes do Natal? Avaliação grátis só este mês.</p>
+<p style="font-size:24px;font-weight:600;background:#E4E6EB;border-radius:8px;padding:8px 20px;text-align:center">Saber mais</p>
+</div>
+</div>
+</div>
+</div>
+
+</section>
+<section id="confianca" data-transition="fade" style="background:#15171C;color:#F6F3EE;font-family:'DM Sans', Arial, sans-serif;padding:96px 128px;display:flex;flex-direction:column;gap:36px">
+<div style="display:flex;flex-direction:column;gap:8px">
+<p style="font-size:26px;letter-spacing:4px;text-transform:uppercase;color:#E8692C;font-weight:600">Confiança</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:700;line-height:1.02">“Não confio na IA.”</h2>
+</div>
+<div style="display:flex;gap:48px;flex:1">
+<div style="width:1010px;flex:none;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:30px;color:#C9C4BB;font-weight:600">Mas…</p>
+<div style="display:flex;gap:20px;align-items:flex-start"><x-icon name="Home" style="color:#E8692C;width:44px;height:44px"></x-icon><div style="display:flex;flex-direction:column;gap:2px"><p style="font-size:32px;font-weight:600">Deixo uma câmara da Amazon filmar a minha casa.</p><p style="font-size:24px;color:#A9A49B">Ring: funcionários tinham acesso aos vídeos dos clientes (FTC, 2023)</p></div></div>
+<div style="display:flex;gap:20px;align-items:flex-start"><x-icon name="Chat" style="color:#E8692C;width:44px;height:44px"></x-icon><div style="display:flex;flex-direction:column;gap:2px"><p style="font-size:32px;font-weight:600">Falo à frente da Alexa e da Siri.</p><p style="font-size:24px;color:#A9A49B">Gravações ouvidas por terceiros; a Apple pagou 95 milhões de dólares</p></div></div>
+<div style="display:flex;gap:20px;align-items:flex-start"><x-icon name="PaperPlane" style="color:#E8692C;width:44px;height:44px"></x-icon><div style="display:flex;flex-direction:column;gap:2px"><p style="font-size:32px;font-weight:600">Mando os dados da empresa por email.</p><p style="font-size:24px;color:#A9A49B">Faturas, salários e IBAN em anexo, para a contabilidade</p></div></div>
+<div style="display:flex;gap:20px;align-items:flex-start"><x-icon name="Key" style="color:#E8692C;width:44px;height:44px"></x-icon><div style="display:flex;flex-direction:column;gap:2px"><p style="font-size:32px;font-weight:600">Confirmo tudo com um código por SMS.</p><p style="font-size:24px;color:#A9A49B">Com uma troca de cartão SIM, os códigos vão para outra pessoa</p></div></div>
+<div style="display:flex;gap:20px;align-items:flex-start"><x-icon name="Lock" style="color:#E8692C;width:44px;height:44px"></x-icon><div style="display:flex;flex-direction:column;gap:2px"><p style="font-size:32px;font-weight:600">Falo de negócios no Telegram.</p><p style="font-size:24px;color:#A9A49B">As conversas normais não têm encriptação de ponta a ponta</p></div></div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px">
+<p style="font-size:30px;color:#C9C4BB;font-weight:600">Quem já foi atacado</p>
+<div style="background:#22252C;border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:2px"><p style="font-size:28px;font-weight:700">Microsoft · 2023</p><p style="font-size:24px;color:#A9A49B">Emails do governo dos EUA invadidos</p></div>
+<div style="background:#22252C;border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:2px"><p style="font-size:28px;font-weight:700">TAP · 2022</p><p style="font-size:24px;color:#A9A49B">Dados de 1,5 milhões de clientes</p></div>
+<div style="background:#22252C;border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:2px"><p style="font-size:28px;font-weight:700">Vodafone Portugal · 2022</p><p style="font-size:24px;color:#A9A49B">Rede em baixo no país inteiro</p></div>
+<div style="background:#22252C;border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:2px"><p style="font-size:28px;font-weight:700">Facebook · 2021</p><p style="font-size:24px;color:#A9A49B">2,2 milhões de portugueses expostos</p></div>
+</div>
+</div>
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:700;line-height:1.15">O risco nunca foi a IA. É usar ferramentas sem regras, <span style="color:#E8692C">dando permissão para tudo.</span></p>
+
+</section>
+<section id="antes-hoje" data-transition="fade" style="background:#F6F3EE;color:#15171C;font-family:'DM Sans', Arial, sans-serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:26px;letter-spacing:4px;text-transform:uppercase;color:#C2501A;font-weight:600">O gargalo acabou</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:72px;font-weight:700;line-height:1.1">Fazer anúncios: antes e hoje</h2>
+</div>
+<div style="display:flex;gap:32px;flex:1">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px;background:#FFFFFF;border:1px solid #E2DDD4;border-radius:24px;padding:40px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:700;color:#8C8A85">Antes</p>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:20px;background:#F6F3EE;border-radius:16px;padding:20px 24px">
+<x-icon name="Settings" style="color:#8C8A85;width:40px;height:40px"></x-icon>
+<p style="font-size:30px">Dominar o Gestor de Anúncios</p>
+</div>
+<div style="display:flex;align-items:center;gap:20px;background:#F6F3EE;border-radius:16px;padding:20px 24px">
+<x-icon name="Search" style="color:#8C8A85;width:40px;height:40px"></x-icon>
+<p style="font-size:30px">Escolher interesses à mão</p>
+</div>
+<div style="display:flex;align-items:center;gap:20px;background:#F6F3EE;border-radius:16px;padding:20px 24px">
+<x-icon name="Tool" style="color:#8C8A85;width:40px;height:40px"></x-icon>
+<p style="font-size:30px">Subir conjunto a conjunto, criativo a criativo</p>
+</div>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:2px solid #E2DDD4;padding:24px 0 0 0">
+<p style="font-size:26px;color:#4A4F57">O empresário pagava</p>
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:700">300 € anúncios <span style="color:#C2501A">+ 500 € gestor</span></p>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px;background:#15171C;color:#F6F3EE;border-radius:24px;padding:40px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:700;color:#E8692C">Hoje</p>
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="align-self:end;max-width:620px;font-size:28px;line-height:1.35;background:#E8692C;color:#15171C;border-radius:20px;padding:20px 24px">Sobe este vídeo no Meta Ads. Ponte de Lima, 9 € por dia.</p>
+<div style="display:flex;align-items:center;gap:16px;align-self:start;max-width:640px;background:#2A2D35;border-radius:20px;padding:20px 24px">
+<x-icon name="CheckCircle" style="color:#7FD18B;width:40px;height:40px"></x-icon>
+<p style="font-size:28px;line-height:1.35">Feito. Campanha ativa no Meta Ads.</p>
+</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#22252C;border-radius:16px;padding:20px 24px">
+<p style="font-size:26px;font-weight:600">Tu</p>
+<x-shape kind="arrow-right" style="background:#8C8A85;width:40px;height:20px"></x-shape>
+<p style="font-size:26px;font-weight:600">Agente IA</p>
+<x-shape kind="arrow-right" style="background:#8C8A85;width:40px;height:20px"></x-shape>
+<p style="font-size:26px;font-weight:600;color:#E8692C">MCP</p>
+<x-shape kind="arrow-right" style="background:#8C8A85;width:40px;height:20px"></x-shape>
+<p style="font-size:26px;font-weight:600">Meta / Google</p>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:2px solid #3A3D45;padding:24px 0 0 0">
+<p style="font-size:26px;color:#C9C4BB">O que diferencia agora</p>
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:700">A estratégia e o funil</p>
+</div>
+</div>
+</div>
+
+</section>
+<section id="filtro" data-transition="fade" style="display:flex; flex-direction:column; gap:64px; padding:128px; background:#f6f3ee">
+  <div style="display:flex; flex-direction:column; gap:16px">
+    <p style="font-family:'DM Sans', Arial, sans-serif; font-size:26px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:#c2501a">A solução</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:72px; font-weight:700; line-height:1.1; color:#15171c">Quem filtra é o anúncio, não a segmentação</h2>
+  </div>
+  <div style="display:grid; gap:32px; grid-template-columns:1fr 1fr 1fr">
+    <div style="display:flex; flex-direction:column; gap:20px; padding:48px; background:#ffffff; border:1px solid #e2ddd4; border-radius:24px">
+      <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:72px; font-weight:700; line-height:1; color:#e8692c">1</p>
+      <h3 style="font-family:'DM Sans', Arial, sans-serif; font-size:40px; font-weight:600; line-height:1.15; color:#15171c">Fala com o local</h3>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:28px; line-height:1.4; color:#4a4f57">“Para quem mora em Ponte de Lima.” Nomeia as freguesias.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px; padding:48px; background:#ffffff; border:1px solid #e2ddd4; border-radius:24px">
+      <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:72px; font-weight:700; line-height:1; color:#e8692c">2</p>
+      <h3 style="font-family:'DM Sans', Arial, sans-serif; font-size:40px; font-weight:600; line-height:1.15; color:#15171c">Idioma português (caso necessário)</h3>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:28px; line-height:1.4; color:#4a4f57">Corta a maior parte dos turistas e peregrinos estrangeiros.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px; padding:48px; background:#ffffff; border:1px solid #e2ddd4; border-radius:24px">
+      <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:72px; font-weight:700; line-height:1; color:#e8692c">3</p>
+      <h3 style="font-family:'DM Sans', Arial, sans-serif; font-size:40px; font-weight:600; line-height:1.15; color:#15171c">Pergunta no formulário</h3>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:28px; line-height:1.4; color:#4a4f57">QUALIFICA NO FORMULÁRIO</p>
+    </div>
+  </div>
+  
+</section>
+<section id="equipa" data-transition="fade" style="background:#15171C;color:#F6F3EE;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between">
+<p style="font-size:26px;letter-spacing:4px;text-transform:uppercase;color:#E8692C;font-weight:600">Como trabalhávamos antes dos agentes</p>
+<div style="display:flex;align-items:center;gap:80px">
+<div style="display:flex;flex-direction:column;gap:8px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:260px;font-weight:700;line-height:1;color:#8C8A85">8</p>
+<p style="font-size:32px;color:#C9C4BB">pessoas</p>
+</div>
+<x-shape kind="arrow-right" style="background:#E8692C;width:180px;height:90px"></x-shape>
+<div style="display:flex;flex-direction:column;gap:8px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:260px;font-weight:700;line-height:1">4</p>
+<p style="font-size:32px;color:#C9C4BB">pessoas + uma equipa de agentes</p>
+</div>
+</div>
+<p style="font-size:32px;line-height:1.4;color:#C9C4BB;width:1500px">O trabalho repetitivo que ocupava duas pessoas, hoje um agente faz às 9h30 e manda-nos o relatório.</p>
+
+</section>
+<section id="arquitetura" data-transition="fade" style="background:#F6F3EE;color:#15171C;font-family:'DM Sans', Arial, sans-serif;padding:112px 128px;display:flex;flex-direction:column;gap:12px">
+<p style="font-size:26px;letter-spacing:4px;text-transform:uppercase;color:#C2501A;font-weight:600">A nossa arquitetura</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:700;line-height:1.1">Um orquestrador, sete agentes</h2>
+<x-connector x1="960" y1="550" x2="237" y2="620" route="elbow" head="end" style="color:#8C8A85;border-width:3px"></x-connector>
+<x-connector x1="960" y1="550" x2="478" y2="620" route="elbow" head="end" style="color:#8C8A85;border-width:3px"></x-connector>
+<x-connector x1="960" y1="550" x2="719" y2="620" route="elbow" head="end" style="color:#8C8A85;border-width:3px"></x-connector>
+<x-connector x1="960" y1="550" x2="960" y2="620" head="end" style="color:#8C8A85;border-width:3px"></x-connector>
+<x-connector x1="960" y1="550" x2="1201" y2="620" route="elbow" head="end" style="color:#8C8A85;border-width:3px"></x-connector>
+<x-connector x1="960" y1="550" x2="1442" y2="620" route="elbow" head="end" style="color:#8C8A85;border-width:3px"></x-connector>
+<x-connector x1="960" y1="550" x2="1683" y2="620" route="elbow" head="end" style="color:#8C8A85;border-width:3px"></x-connector>
+<div style="position:absolute;left:1272px;top:112px;width:520px;height:72px;background:#FFFFFF;border:2px solid #15171C;border-radius:40px;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:16px">
+<x-icon name="Code" style="color:#C2501A;width:36px;height:36px"></x-icon>
+<p style="font-size:28px;font-weight:600">Tudo feito com <b>Claude Code</b></p>
+</div>
+<div style="position:absolute;left:610px;top:380px;width:700px;height:170px;background:#15171C;border-radius:24px;padding:20px 32px;display:flex;flex-direction:row;align-items:center;gap:28px">
+<svg aria-label="Ilustração do Hermes como gerente, de fato e gravata" width="130" height="130" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg"><circle cx="65" cy="65" r="65" fill="#E8692C"/><path d="M22 130c4-30 22-44 43-44s39 14 43 44z" fill="#2A2D35"/><path d="M50 88l15 14 15-14 0 42H50z" fill="#F6F3EE"/><path d="M61 98h8l3 10-7 18-7-18z" fill="#15171C"/><path d="M50 88l15 14-10 10-9-20z" fill="#3A3D45"/><path d="M80 88L65 102l10 10 9-20z" fill="#3A3D45"/><rect x="57" y="72" width="16" height="16" rx="5" fill="#E9C2A6"/><circle cx="65" cy="54" r="22" fill="#F2D3BA"/><path d="M43 52c0-16 10-24 22-24s22 8 22 24c-4-7-12-11-22-11s-18 4-22 11z" fill="#15171C"/><circle cx="57" cy="56" r="2.6" fill="#15171C"/><circle cx="73" cy="56" r="2.6" fill="#15171C"/><path d="M58 65c4 4 10 4 14 0" stroke="#15171C" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M42 50c0-14 10-25 23-25s23 11 23 25" stroke="#F6F3EE" stroke-width="3" fill="none"/><rect x="38" y="48" width="8" height="14" rx="4" fill="#F6F3EE"/><rect x="84" y="48" width="8" height="14" rx="4" fill="#F6F3EE"/></svg>
+<div style="display:flex;flex-direction:column;gap:6px">
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:700;color:#F6F3EE">Hermes</h3>
+<p style="font-size:26px;color:#E8692C;font-weight:600">O gerente: distribui e acompanha o trabalho</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;top:620px;width:218px;height:260px;background:#FFFFFF;border:2px solid #E8692C;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.2">Anúncios</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A4F57">Otimiza campanhas e reporta às 9h30</p>
+</div>
+<div style="position:absolute;left:369px;top:620px;width:218px;height:260px;background:#FFFFFF;border:2px solid #E8692C;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.2">Leads</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A4F57">Qualifica o primeiro contacto no WhatsApp</p>
+</div>
+<div style="position:absolute;left:610px;top:620px;width:218px;height:260px;background:#FFFFFF;border:2px solid #E8692C;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.2">Web</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A4F57">Landing pages, sites e lojas Shopify</p>
+</div>
+<div style="position:absolute;left:851px;top:620px;width:218px;height:260px;background:#FFFFFF;border:2px solid #E8692C;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.2">Editor de vídeo</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A4F57">Vídeos prontos para as redes sociais</p>
+</div>
+<div style="position:absolute;left:1092px;top:620px;width:218px;height:260px;background:#FFFFFF;border:2px solid #E8692C;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.2">Segurança</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A4F57">Protege os sistemas e sites</p>
+</div>
+<div style="position:absolute;left:1333px;top:620px;width:218px;height:260px;background:#FFFFFF;border:2px solid #E8692C;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.2">ERP e CRM</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A4F57">Gere clientes, processos e faturação</p>
+</div>
+<div style="position:absolute;left:1574px;top:620px;width:218px;height:260px;background:#FFFFFF;border:2px solid #E8692C;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.2">Suporte</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A4F57">Responde aos clientes no WhatsApp</p>
+</div>
+<img src="assets/qr-agentes.png" alt="QR code para o guia Arquiteto de Agentes" style="position:absolute;left:128px;top:330px;width:200px;height:200px;object-fit:contain;border-radius:12px;border:2px solid #15171C">
+<p style="position:absolute;left:350px;top:350px;width:230px;font-size:28px;font-weight:600;line-height:1.25">Monte esta equipa na sua empresa</p>
+<p style="position:absolute;left:350px;top:460px;width:230px;font-size:24px;color:#4A4F57"><a href="https://upmaxpro.pt/agentes">upmaxpro.pt/agentes</a></p>
+
+</section>
+<section id="escritorio" data-transition="fade" style="background:#0e0f13">
+  <img src="assets/escritorio.jpg" alt="Escritório virtual 3D da Upmax Pro, com os agentes sentados nas secretárias" data-video="assets/escritorio.mp4" style="position:absolute; top:0; left:40px; width:1920px; height:1080px">
+  <div style="position:absolute; top:640px; left:0; width:1920px; height:440px; display:flex; flex-direction:column; background:linear-gradient(0deg, #0e0f13eb 0%, #0e0f1399 55%, #0e0f1300 100%)">
+  </div>
+  <div style="position:absolute; top:760px; left:128px; width:1200px; display:flex; flex-direction:column; gap:12px">
+    <p style="font-family:'DM Sans', Arial, sans-serif; font-size:26px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:#e8692c">O nosso escritório virtual</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:72px; font-weight:700; line-height:1.05; color:#f6f3ee">Vejo os agentes a trabalhar</h2>
+  </div>
+  
+</section>
+<section id="sites" data-transition="fade" style="background:#f6f3ee">
+  <div id="pfbb912d3e582r0-eb093f9b" style="position:absolute; top:88px; left:128px; width:1664px; height:115px; display:flex; flex-direction:column; gap:8px">
+    <p style="font-family:'DM Sans', Arial, sans-serif; font-size:26px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:#c2501a">Criação de sites</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:64px; font-weight:700; line-height:1.1; color:#15171c">A evolução dos sites</h2>
+  </div>
+  <div id="pfbb912d3e582r1-eb093f9b" style="position:absolute; top:231px; left:128px; width:1664px; height:374px; display:grid; gap:24px; grid-template-columns:1fr 1fr 1fr 1fr">
+    <div style="display:flex; flex-direction:column; gap:12px">
+      <div style="height:170px; display:flex; flex-direction:column; gap:2px; justify-content:center; padding:20px; background:#15171c; border-radius:14px">
+        <p style="font-family:'Courier New', monospace; font-size:24px; line-height:1.3; color:#7fd18b">&lt;html&gt;</p>
+        <p style="font-family:'Courier New', monospace; font-size:24px; line-height:1.3; color:#7fd18b">&nbsp;&nbsp;&lt;head&gt;</p>
+        <p style="font-family:'Courier New', monospace; font-size:24px; line-height:1.3; color:#7fd18b">&nbsp;&nbsp;&lt;table&gt;…</p>
+      </div>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; font-weight:600; color:#c2501a">Anos 90 e 2000</p>
+      <h3 style="font-family:'DM Sans', Arial, sans-serif; font-size:32px; font-weight:700; line-height:1.15; color:#15171c">Código à mão</h3>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; line-height:1.35; color:#4a4f57">HTML linha a linha. Só quem programava fazia sites.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:12px">
+      <div style="height:170px; display:flex; flex-direction:column; gap:10px; padding:16px; background:#ffffff; border:1px solid #e2ddd4; border-radius:14px">
+        <div style="height:28px; display:flex; flex-direction:column; background:#e2ddd4; border-radius:6px">
+        </div>
+        <div style="display:flex; flex-direction:row; gap:10px; flex:1">
+          <div style="display:flex; flex-direction:column; flex:1; background:#e2ddd4; border-radius:6px">
+          </div>
+          <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; flex:1; border:3px dashed #e8692c; border-radius:6px">
+            <x-icon name="Tool" style="width:36px; height:36px; color:#e8692c"></x-icon>
+          </div>
+        </div>
+      </div>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; font-weight:600; color:#c2501a">2005 a 2023</p>
+      <h3 style="font-family:'DM Sans', Arial, sans-serif; font-size:32px; font-weight:700; line-height:1.15; color:#15171c">CMS e arrastar e largar</h3>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; line-height:1.35; color:#4a4f57">WordPress, Wix, Elementor. O WordPress ainda move 40% dos sites do mundo.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:12px">
+      <div style="height:170px; display:flex; flex-direction:column; gap:10px; align-items:center; justify-content:center; padding:20px; background:linear-gradient(135deg, #7b5cff 0%, #3b82f6 100%); border-radius:14px">
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:28px; font-weight:700; line-height:1.15; text-align:center; color:#ffffff">Transforme o seu negócio</p>
+        <p style="padding:4px 18px; font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#ffffff; background:#ffffff38; border-radius:256px">Começar</p>
+      </div>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; font-weight:600; color:#c2501a">2024 e 2025</p>
+      <h3 style="font-family:'DM Sans', Arial, sans-serif; font-size:32px; font-weight:700; line-height:1.15; color:#15171c">Sites feitos por IA</h3>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; line-height:1.35; color:#4a4f57">Rápidos e baratos. Cara de IA, sem segurança e sem autonomia.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:12px">
+      <div style="height:170px; display:flex; flex-direction:column; gap:12px; justify-content:center; padding:16px 20px; background:#15171c; border-radius:14px">
+        <div style="display:flex; flex-direction:row; gap:10px; align-items:center">
+          <x-icon name="Lock" style="width:30px; height:30px; color:#7fd18b"></x-icon>
+          <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">Seguro e legal</p>
+        </div>
+        <div style="display:flex; flex-direction:row; gap:10px; align-items:center">
+          <x-icon name="Star" style="width:30px; height:30px; color:#e8692c"></x-icon>
+          <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">Design com identidade</p>
+        </div>
+        <div style="display:flex; flex-direction:row; gap:10px; align-items:center">
+          <x-icon name="Key" style="width:30px; height:30px; color:#e8692c"></x-icon>
+          <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">O código é seu</p>
+        </div>
+      </div>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; font-weight:600; color:#c2501a">Hoje</p>
+      <h3 style="font-family:'DM Sans', Arial, sans-serif; font-size:32px; font-weight:700; line-height:1.15; color:#15171c">IA com estratégia</h3>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; line-height:1.35; color:#4a4f57">A IA acelera. A pessoa garante segurança, lei e identidade.</p>
+    </div>
+  </div>
+  <div id="pfbb912d3e582r2-eb093f9b" style="position:absolute; top:649.01px; left:50%; width:1664px; height:360px; display:flex; flex-direction:row; gap:48px; align-items:center; padding:32px 40px; background:#15171c; border-radius:24px; transform:translateX(-50%)">
+    <div style="width:470px; display:flex; flex-direction:column; gap:10px; flex:0 0 auto">
+      <p style="font-family:'Space Grotesk', Arial, sans-serif; font-size:44px; font-weight:700; line-height:1.1; color:#f6f3ee">“Faço sites por 100 €.”</p>
+      <p style="font-family:'DM Sans', Arial, sans-serif; font-size:28px; line-height:1.35; color:#c9c4bb">Funciona. Mas é seguro? <span style="color:#e8692c">Cumpre a lei portuguesa?</span></p>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; flex:1">
+      <div style="display:flex; flex-direction:row; gap:12px; align-items:center">
+        <x-icon name="CheckCircle" style="width:30px; height:30px; color:#7fd18b"></x-icon>
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">Livro de Reclamações Eletrónico</p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:12px; align-items:center">
+        <x-icon name="CheckCircle" style="width:30px; height:30px; color:#7fd18b"></x-icon>
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">Entidades de resolução de litígios</p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:12px; align-items:center">
+        <x-icon name="CheckCircle" style="width:30px; height:30px; color:#7fd18b"></x-icon>
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">Política de privacidade (RGPD)</p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:12px; align-items:center">
+        <x-icon name="CheckCircle" style="width:30px; height:30px; color:#7fd18b"></x-icon>
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">Cookies com consentimento</p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:12px; align-items:center">
+        <x-icon name="CheckCircle" style="width:30px; height:30px; color:#7fd18b"></x-icon>
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">Empresa identificada (NIF, morada)</p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:12px; align-items:center">
+        <x-icon name="CheckCircle" style="width:30px; height:30px; color:#7fd18b"></x-icon>
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">“Chamada para a rede móvel nacional”</p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:12px; align-items:center">
+        <x-icon name="CheckCircle" style="width:30px; height:30px; color:#7fd18b"></x-icon>
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">Acessibilidade (lojas online)</p>
+      </div>
+      <div style="display:flex; flex-direction:row; gap:12px; align-items:center">
+        <x-icon name="CheckCircle" style="width:30px; height:30px; color:#7fd18b"></x-icon>
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; color:#f6f3ee">HTTPS e proteção de formulários</p>
+      </div>
+    </div>
+  </div>
+  
+</section>
+<section id="alameda" data-transition="fade" style="display:flex; flex-direction:column; gap:32px; padding:96px 128px; background:#0e0f13">
+  <div style="display:flex; flex-direction:column; gap:10px">
+    <p style="font-family:'DM Sans', Arial, sans-serif; font-size:26px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:#e8692c">Sites cinematográficos</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:72px; font-weight:700; line-height:1.05; color:#f6f3ee">Um site de 3 mil euros, entregue em 5 horas.</h2>
+  </div>
+  <div style="display:flex; flex-direction:row; gap:40px; flex:1">
+    <div style="width:1112px; display:flex; flex-direction:column; gap:16px; flex:0 0 auto">
+      <img src="assets/alameda-dia.jpg" alt="Página inicial do site Alameda com a fachada de uma casa de luxo ao pôr do sol" style="width:1112px; height:440px; border-radius:16px">
+      <div style="display:flex; flex-direction:row; gap:16px">
+        <img src="assets/alameda-noite.jpg" alt="A mesma casa à noite, com as luzes acesas, ao fazer scroll" style="width:360px; height:200px; border-radius:12px">
+        <img src="assets/alameda-soleira.jpg" alt="Entrada da casa com a porta aberta para a sala" style="width:360px; height:200px; border-radius:12px">
+        <img src="assets/alameda-secao.jpg" alt="Secção clara do site com o título Discreta na rua, generosa no fundo" style="width:360px; height:200px; border-radius:12px">
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px; align-items:center; justify-content:center; flex:1; padding:36px; background:#1c1f26; border-radius:24px">
+      <div style="display:flex; flex-direction:row; gap:40px">
+        <div style="display:flex; flex-direction:column; gap:10px; align-items:center">
+          <img src="assets/qr-alameda.png" alt="QR code para o site Alameda" style="width:200px; height:200px; border-radius:12px; object-fit:contain">
+          <p style="font-family:'DM Sans', Arial, sans-serif; font-size:26px; font-weight:700; text-align:center; color:#f6f3ee">Ver ao vivo</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px; align-items:center">
+          <img src="assets/qr-cinematografico.png" alt="QR code para o passo a passo do site cinematográfico" style="width:200px; height:200px; border-radius:12px; object-fit:contain">
+          <p style="font-family:'DM Sans', Arial, sans-serif; font-size:26px; font-weight:700; text-align:center; color:#e8692c">Como fazer</p>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:6px; align-self:stretch">
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; text-align:center; color:#c9c4bb"><a href="https://alameda-alphaville.vercel.app/">alameda-alphaville.vercel.app</a></p>
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; text-align:center; color:#e8692c"><a href="https://upmaxpro.pt/cinematografico">upmaxpro.pt/cinematografico</a></p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:6px; align-self:stretch; padding:18px 0 0; border-top:1px solid #3a3d45">
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; text-align:center; color:#c9c4bb">Antes: 4 a 5 mil € e semanas</p>
+        <p style="font-family:'DM Sans', Arial, sans-serif; font-size:24px; font-weight:600; text-align:center; color:#f6f3ee">Hoje: 4 a 5 horas</p>
+      </div>
+    </div>
+  </div>
+  
+</section>
+<section id="final" data-transition="fade" style="background:#0e0f13">
+  <img src="assets/passa-palavra.jpg" alt="Senhor numa rua de Ponte de Lima a recomendar uma loja a uma jovem" style="position:absolute; top:0; left:0; width:1920px; height:1080px">
+  <div style="position:absolute; top:0; left:0; width:1920px; height:1080px; display:flex; flex-direction:column; background:linear-gradient(270deg, #0e0f13f2 0%, #0e0f13e0 38%, #0e0f1333 70%, #0e0f1300 100%)">
+  </div>
+  <div style="position:absolute; top:200px; left:1000px; width:792px; display:flex; flex-direction:column; gap:20px">
+    <p style="font-family:'DM Sans', Arial, sans-serif; font-size:30px; line-height:1.4; color:#c9c4bb">A IA acelera.<br>A IA dá autonomia.<br>A IA corta custos.</p>
+    <h2 style="font-family:'Space Grotesk', Arial, sans-serif; font-size:88px; font-weight:700; line-height:1.02; letter-spacing:-1px; color:#f6f3ee">Mas quem vende são <span style="color:#e8692c">pessoas.</span></h2>
+    <p style="font-family:'DM Sans', Arial, sans-serif; font-size:32px; line-height:1.4; color:#e6e1d8">O grande diferencial do futuro é termos essência e criarmos relacionamento.</p>
+    <div style="display:flex; flex-direction:row; flex-wrap:wrap; gap:12px">
+      <p style="padding:8px 22px; font-family:'DM Sans', Arial, sans-serif; font-size:26px; font-weight:600; color:#f6f3ee; border:2px solid #e8692c; border-radius:256px">Essência</p>
+      <p style="padding:8px 22px; font-family:'DM Sans', Arial, sans-serif; font-size:26px; font-weight:600; color:#f6f3ee; border:2px solid #e8692c; border-radius:256px">Conexão</p>
+    </div>
+  </div>
+  <p style="position:absolute; bottom:96px; left:1000px; width:792px; font-family:'DM Sans', Arial, sans-serif; font-size:26px; color:#c9c4bb">Obrigado · Nedson Aliandro · upmaxpro.pt</p>
+  
+</section>
+</div></div>
+<div class="ctl"><button id="prev" aria-label="Slide anterior">‹</button><span id="count">1 / 1</span><button id="next" aria-label="Slide seguinte">›</button><button id="fs" aria-label="Ecrã inteiro">⤢</button></div>
+<div class="hint">Setas ou clique para avançar</div>
+<script>
+(function(){
+var I={
+Search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+Play:'<path d="M7 4l13 8-13 8z" fill="currentColor"/>',
+Home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+Chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
+PaperPlane:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',
+Key:'<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2"/><path d="M16 7l3 3"/><path d="M18.5 4.5l2 2"/>',
+Lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+Settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+Tool:'<path d="M14.7 6.3a4 4 0 0 0 5 5L22 14l-3 3-2.3-2.3a4 4 0 0 0-5-5L3 18.4 5.6 21l8.7-8.7"/>',
+CheckCircle:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
+Code:'<path d="M8 6l-6 6 6 6"/><path d="M16 6l6 6-6 6"/>',
+Star:'<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',
+Users:'<circle cx="9" cy="8" r="4"/><path d="M2 21v-1a7 7 0 0 1 14 0v1"/><path d="M16 4a4 4 0 0 1 0 8"/><path d="M22 21v-1a7 7 0 0 0-4-6.3"/>'
+};
+document.querySelectorAll('x-icon').forEach(function(e){var p=I[e.getAttribute('name')]||'';e.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';});
+document.querySelectorAll('x-shape').forEach(function(e){
+  var k=e.getAttribute('kind'),bg=e.style.background||e.style.backgroundColor;
+  if(k==='ellipse'){e.style.borderRadius='50%';}
+  else if(k&&k.indexOf('arrow')===0){e.style.background='none';var rot={'arrow-right':0,'arrow-down':90,'arrow-left':180,'arrow-up':270}[k]||0;
+    e.innerHTML='<svg viewBox="0 0 100 50" preserveAspectRatio="none" style="transform:rotate('+rot+'deg)"><path d="M0 14H60V0L100 25 60 50V36H0z" fill="'+bg+'"/></svg>';}
+});
+document.querySelectorAll('x-connector').forEach(function(e){
+  var g=function(a){return parseFloat(e.getAttribute(a))};var x1=g('x1'),y1=g('y1'),x2=g('x2'),y2=g('y2');
+  var c=e.style.color||'#8C8A85',w=parseFloat(e.style.borderWidth)||2,r=e.getAttribute('route');
+  var d=(r==='elbow')?('M'+x1+' '+y1+'V'+((y1+y2)/2)+'H'+x2+'V'+(y2-w*3)):('M'+x1+' '+y1+'L'+x2+' '+(y2-w*3));
+  var head='<path d="M'+(x2-w*3)+' '+(y2-w*4)+'L'+x2+' '+y2+'L'+(x2+w*3)+' '+(y2-w*4)+'z" fill="'+c+'"/>';
+  var s=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  s.setAttribute('width','1920');s.setAttribute('height','1080');s.setAttribute('aria-hidden','true');
+  s.style.cssText='position:absolute;left:0;top:0;pointer-events:none';
+  s.innerHTML='<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="'+w+'"/>'+head;
+  e.replaceWith(s);
+});
+document.querySelectorAll('img[data-video]').forEach(function(im){
+  var v=document.createElement('video');var mp=im.getAttribute('data-video');[[mp,'video/mp4'],[mp.replace(/\.mp4$/,'.webm'),'video/webm']].forEach(function(x){var so=document.createElement('source');so.src=x[0];so.type=x[1];v.appendChild(so);});v.poster=im.getAttribute('src');
+  v.muted=true;v.loop=true;v.playsInline=true;v.preload='auto';v.setAttribute('aria-label',im.alt);
+  v.style.cssText=im.style.cssText;v.style.cursor='pointer';
+  v.addEventListener('click',function(ev){ev.stopPropagation();v.paused?v.play():v.pause();});
+  im.replaceWith(v);
+});
+document.querySelectorAll('#stage section > *').forEach(function(c){if(getComputedStyle(c).position==='static')c.style.position='relative';});
+var ss=[].slice.call(document.querySelectorAll('#stage section')),i=0,stage=document.getElementById('stage');
+function fit(){var s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';}
+function show(n){i=Math.max(0,Math.min(ss.length-1,n));ss.forEach(function(s,k){s.classList.toggle('on',k===i);
+  s.querySelectorAll('video').forEach(function(v){if(k===i){var p=v.play();if(p&&p.catch)p.catch(function(){});}else v.pause();});});
+  document.getElementById('count').textContent=(i+1)+' / '+ss.length;try{history.replaceState(null,'','#'+(i+1));}catch(e){}}
+addEventListener('resize',fit);fit();
+addEventListener('keydown',function(e){if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key)>=0){e.preventDefault();show(i+1);}else if(['ArrowLeft','PageUp','Backspace'].indexOf(e.key)>=0){e.preventDefault();show(i-1);}else if(e.key==='Home')show(0);else if(e.key==='End')show(ss.length-1);else if(e.key==='f')fs();});
+document.getElementById('viewport').addEventListener('click',function(e){if(e.target.closest('a,video'))return;(e.clientX<innerWidth*0.25)?show(i-1):show(i+1);});
+var tx=null;addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
+addEventListener('touchend',function(e){if(tx===null)return;var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)show(dx<0?i+1:i-1);tx=null;});
+document.getElementById('prev').onclick=function(e){e.stopPropagation();show(i-1)};
+document.getElementById('next').onclick=function(e){e.stopPropagation();show(i+1)};
+function fs(){var d=document.documentElement;if(!document.fullscreenElement&&d.requestFullscreen)d.requestFullscreen().catch(function(){});else if(document.exitFullscreen)document.exitFullscreen();}
+document.getElementById('fs').onclick=function(e){e.stopPropagation();fs()};
+var h=parseInt((location.hash||'').slice(1),10);show(h?h-1:0);
+})();
+</script>
+</body>
+</html>
